@@ -27,20 +27,7 @@ export default function HomeScreen() {
       </TouchableOpacity>
 
       {/* Barre de navigation en bas */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text style={styles.footerIcon}>🎵</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text style={styles.footerIcon}>🤝</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text style={styles.footerIcon}>🌲</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text style={styles.footerIcon}>👕</Text>
-        </TouchableOpacity>
-      </View>
+
     </View>
   );
 }

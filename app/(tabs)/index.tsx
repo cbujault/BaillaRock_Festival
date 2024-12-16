@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Image, StyleSheet, Platform, View, Text } from 'react-native';
+import { StyleSheet, Platform, View, Text, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { Video } from 'expo-av'; // Importez Video de expo-av
+import { Linking } from 'react-native'; // Importez Linking pour la redirection vers une URL
 
 import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
@@ -45,42 +46,64 @@ export default function HomeScreen() {
     return () => clearInterval(interval);
   }, []);
 
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/Dragon.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">BAILLAROCK FESTIVAL</ThemedText>
-        <HelloWave />
-      </ThemedView>
+  // Récupérer la hauteur de l'écran
+  const screenHeight = Dimensions.get('window').height;
 
-      {/* Affichage du compte à rebours */}
-      <View style={styles.countdownContainer}>
-        <View style={styles.countdownRow}>
-          <View style={styles.countdownItem}>
-            <Text style={styles.countdownNumber}>{timeLeft.days}</Text>
-            <Text style={styles.countdownLabel}>Jours</Text>
+  // Fonction pour ouvrir un site web
+  const openWebsite = () => {
+    Linking.openURL('https://www.instagram.com/baillarock_unitedwefest/'); // Remplacez 'http://xxxxx' par l'URL souhaitée
+  };
+
+  return (
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={[styles.imageContainer, { height: screenHeight }]}>
+        {/* Utilisez le composant Video d'Expo */}
+        <Video
+          source={require('@/assets/videos/videohomepage.mp4')} // Remplacez avec votre propre fichier vidéo
+          style={styles.backgroundVideo}
+          resizeMode="cover" // Recouvre l'ensemble de l'écran
+          shouldPlay // Commence la lecture
+          isLooping // Répète la vidéo en boucle
+          isMuted // Vidéo sans son
+        />
+        {/* Texte et compte à rebours au-dessus de la vidéo */}
+        <View style={styles.overlay}>
+          {/* Texte du festival ajouté */}
+          <Text style={styles.TitleText}>BAILLAROCK FESTIVAL</Text>
+          
+          {/* Affichage du compte à rebours */}
+          <View style={styles.countdownContainer}>
+            <View style={styles.countdownRow}>
+              <View style={styles.countdownItem}>
+                <Text style={styles.countdownNumber}>{timeLeft.days}</Text>
+                <Text style={styles.countdownLabel}>Jours</Text>
+              </View>
+              <View style={styles.countdownItem}>
+                <Text style={styles.countdownNumber}>{timeLeft.hours}</Text>
+                <Text style={styles.countdownLabel}>Heures</Text>
+              </View>
+              <View style={styles.countdownItem}>
+                <Text style={styles.countdownNumber}>{timeLeft.minutes}</Text>
+                <Text style={styles.countdownLabel}>Minutes</Text>
+              </View>
+              <View style={styles.countdownItem}>
+                <Text style={styles.countdownNumber}>{timeLeft.seconds}</Text>
+                <Text style={styles.countdownLabel}>Secondes</Text>
+              </View>
+            </View>
           </View>
-          <View style={styles.countdownItem}>
-            <Text style={styles.countdownNumber}>{timeLeft.hours}</Text>
-            <Text style={styles.countdownLabel}>Heures</Text>
-          </View>
-          <View style={styles.countdownItem}>
-            <Text style={styles.countdownNumber}>{timeLeft.minutes}</Text>
-            <Text style={styles.countdownLabel}>Minutes</Text>
-          </View>
-          <View style={styles.countdownItem}>
-            <Text style={styles.countdownNumber}>{timeLeft.seconds}</Text>
-            <Text style={styles.countdownLabel}>Secondes</Text>
-          </View>
+          
+          {/* Adresse en italique, au-dessus du bouton */}
+          <Text style={styles.addressText}>Saint Georges Les Baillargeaux</Text>
+
+          {/* Le bouton en bas du compteur */}
+          <TouchableOpacity style={styles.button} onPress={openWebsite}>
+            <Text style={styles.buttonText}>Achetez vos billets !</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
+      {/* Etapes d'instructions */}
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
@@ -114,16 +137,50 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </ThemedView>
-    </ParallaxScrollView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  // Conteneur global pour le défilement
+  scrollContainer: {
+    flexGrow: 1,
   },
+  imageContainer: {
+    position: 'relative',
+    width: '100%',
+    height: '100%',
+  },
+  backgroundVideo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: -1, // Placer la vidéo en arrière-plan
+  },
+
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fond sombre pour assombrir la vidéo
+    paddingBottom: 50, // Espacement pour ne pas que le bouton soit collé
+  },
+  
+  TitleText: {
+    fontSize: 35, // Taille du texte
+    fontWeight: 'bold', // Gras
+    color: 'white', // Couleur blanche
+    marginBottom: 20, // Espacement entre le texte et le compteur
+    justifyContent : 'center',
+    alignContent: 'center',
+  },
+
   countdownContainer: {
     marginVertical: 20,
     alignItems: 'center',
@@ -131,7 +188,7 @@ const styles = StyleSheet.create({
   countdownRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '100%',
+    width: '80%',
   },
   countdownItem: {
     alignItems: 'center',
@@ -139,22 +196,37 @@ const styles = StyleSheet.create({
   countdownNumber: {
     fontSize: 40,
     fontWeight: 'bold',
-    color: '#28a745', // Changer la couleur en vert
+    color: '#fff', // Couleur blanche pour le texte
   },
   countdownLabel: {
     fontSize: 14,
     fontWeight: 'normal',
-    color: '#555',
+    color: '#ddd', // Couleur douce pour les labels
   },
+  button: {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Couleur du bouton
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    elevation: 3, // Ombre pour le bouton
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+
+  // Nouveau style pour l'adresse en italique et au-dessus du bouton
+  addressText: {
+    fontSize: 12, // Taille de police petite
+    fontStyle: 'italic', // Texte en italique
+    color: '#fff', // Couleur blanche
+    marginBottom: 10, // Espacement au-dessus du bouton
+    textAlign: 'center', // Centrer le texte
+  },
+
   stepContainer: {
     gap: 8,
     marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
   },
 });
