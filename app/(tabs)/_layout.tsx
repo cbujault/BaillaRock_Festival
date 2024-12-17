@@ -14,18 +14,18 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: 'green', // Couleur des icônes/titres actifs
+        tabBarInactiveTintColor: 'gray', // Couleur des icônes/titres inactifs
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
+        tabBarStyle: {
+          backgroundColor: 'rgb(18, 18, 18)', // Toujours sombre (noir/gris foncé)
+          borderTopWidth: 0,          // Supprime la bordure supérieure
+          height: 60,                 // Ajuste la hauteur de la barre
+        },
       }}>
+
       <Tabs.Screen
         name="index"
         options={{
@@ -38,6 +38,14 @@ export default function TabLayout() {
         options={{
           title: 'Explore',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+
+      <Tabs.Screen
+        name="Village"
+        options={{
+          title: 'Village',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
     </Tabs>
