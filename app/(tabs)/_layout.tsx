@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',  // Positionnement absolu
     top: -30,  // Ajuste la position verticale du bouton
-    left: '50%',  // Positionne le bouton à 40% de la largeur de l'écran
+    left: '100%',  // Positionne le bouton à 40% de la largeur de l'écran
     transform: [{ translateX: -35 }],  // Décale le bouton vers la gauche de la moitié de sa largeur (70 / 2 = 35)
     borderWidth: 2,
     borderColor: 'gray',  // Couleur de la bordure
