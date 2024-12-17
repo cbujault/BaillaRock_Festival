@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, FlatList } from 'react-native';
+import { StyleSheet, View, Text, Image, FlatList, Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -20,28 +20,42 @@ type DayScreenProps = {
 function DayScreen({ groups }: DayScreenProps) {
   const flatListRef = useRef<FlatList<Group>>(null);
 
-  // Récupérer l'heure actuelle pour le défilement
+  // Récupérer l'heure actuelle pour le calcul de progression
   const currentTime = new Date().getHours() + new Date().getMinutes() / 60;
 
-  // Trouver l'index du premier groupe à venir
+  // Trouver l'index du groupe en cours
   const currentIndex = groups.findIndex((group) => {
     const groupTime = parseFloat(group.time.split(':')[0]) + parseFloat(group.time.split(':')[1]) / 60;
     return groupTime >= currentTime;
   });
 
-  // Faire défiler automatiquement à l'index courant
+  // Faire défiler automatiquement au groupe en cours
   useEffect(() => {
     if (currentIndex !== -1 && flatListRef.current) {
       flatListRef.current.scrollToIndex({ index: currentIndex, animated: true });
     }
   }, [currentIndex]);
 
+  // Calculer la progression en pourcentage
+  const calculateProgress = () => {
+    const totalGroups = groups.length;
+    const progress = currentIndex === -1 ? totalGroups : currentIndex;
+    return (progress / totalGroups) * 100;
+  };
+
   const renderGroup = ({ item }: { item: Group }) => {
     const groupTime = parseFloat(item.time.split(':')[0]) + parseFloat(item.time.split(':')[1]) / 60;
     const isPast = groupTime < currentTime;
+    const isCurrent = groupTime >= currentTime && groupTime - currentTime <= 1;
 
     return (
-      <View style={[styles.groupContainer, isPast && styles.pastGroup]}>
+      <View
+        style={[
+          styles.groupContainer,
+          isPast && styles.pastGroup,
+          isCurrent && styles.currentGroup,
+        ]}
+      >
         <Image source={{ uri: item.image }} style={styles.groupImage} />
         <View style={styles.groupDetails}>
           <Text style={styles.groupName}>{item.name}</Text>
@@ -53,14 +67,23 @@ function DayScreen({ groups }: DayScreenProps) {
   };
 
   return (
-    <FlatList
-      ref={flatListRef}
-      data={groups}
-      keyExtractor={(item) => item.id}
-      renderItem={renderGroup}
-      getItemLayout={(data, index) => ({ length: 110, offset: 110 * index, index })} // Optimisation pour le défilement
-      initialNumToRender={5} // Amélioration des performances
-    />
+    <View style={styles.screenContainer}>
+      {/* Curseur d'avancée */}
+      <View style={styles.progressContainer}>
+        <View style={[styles.progressBar, { height: `${calculateProgress()}%` }]} />
+      </View>
+
+      {/* Liste des groupes */}
+      <FlatList
+        ref={flatListRef}
+        data={groups}
+        keyExtractor={(item) => item.id}
+        renderItem={renderGroup}
+        getItemLayout={(data, index) => ({ length: 110, offset: 110 * index, index })} // Optimisation pour le défilement
+        initialNumToRender={5}
+        contentContainerStyle={styles.listContent}
+      />
+    </View>
   );
 }
 
@@ -93,6 +116,27 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
+  screenContainer: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+  progressContainer: {
+    width: 10,
+    backgroundColor: '#ddd',
+    marginVertical: 5,
+    marginHorizontal: 5,
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
+  progressBar: {
+    width: '100%',
+    backgroundColor: '#ff6347',
+    position: 'absolute',
+    bottom: 0,
+  },
+  listContent: {
+    paddingBottom: 10,
+  },
   groupContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -104,6 +148,10 @@ const styles = StyleSheet.create({
   },
   pastGroup: {
     opacity: 0.5,
+    backgroundColor: '#e0e0e0',
+  },
+  currentGroup: {
+    backgroundColor: '#ffeb3b',
   },
   groupImage: {
     width: 80,
