@@ -81,16 +81,14 @@ export default function TabTwoScreen() {
   ];
 
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Day 1">
-          {() => <DayScreen groups={dayOneGroups} />}
-        </Tab.Screen>
-        <Tab.Screen name="Day 2">
-          {() => <DayScreen groups={dayTwoGroups} />}
-        </Tab.Screen>
-      </Tab.Navigator>
-    </NavigationContainer>
+    <Tab.Navigator>
+      <Tab.Screen name="Day 1">
+        {() => <DayScreen groups={dayOneGroups} />}
+      </Tab.Screen>
+      <Tab.Screen name="Day 2">
+        {() => <DayScreen groups={dayTwoGroups} />}
+      </Tab.Screen>
+    </Tab.Navigator>
   );
 }
 
