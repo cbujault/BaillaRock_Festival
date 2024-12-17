@@ -59,15 +59,24 @@ export default function HomeScreen() {
     Linking.openURL('https://www.instagram.com/baillarock_unitedwefest/'); // Remplacez 'http://xxxxx' par l'URL souhaitée
   };
 
-  // Fonction pour gérer le défilement
-  const handleScroll = (event) => {
-    const contentOffsetY = event.nativeEvent.contentOffset.y;
-    if (contentOffsetY > 0 && !isScrolled) {
-      setIsScrolled(true);
-    } else if (contentOffsetY <= 0 && isScrolled) {
-      setIsScrolled(false);
-    }
-  };
+  // Fonction pour gérer le défilement avec des seuils asymétriques
+    const handleScroll = (event) => {
+      const contentOffsetY = event.nativeEvent.contentOffset.y;
+      
+      const threshold = 500; // Seuil pour passer à l'image
+      const thresholdReturn = 0; // Seuil pour revenir à la vidéo
+      
+      // Vérification si on descend assez pour passer à l'image
+      if (contentOffsetY > threshold && !isScrolled) {
+        setIsScrolled(true);
+      } 
+      // Vérification si on remonte au-dessus du seuil pour revenir à la vidéo
+      else if (contentOffsetY < thresholdReturn && isScrolled) {
+        setIsScrolled(false);
+      }
+    };
+    
+
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer} onScroll={handleScroll} scrollEventThrottle={16}>
@@ -199,6 +208,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  // Style pour la vidéo en portrait
   backgroundVideo: {
     position: 'absolute',
     top: 0,
@@ -207,14 +217,17 @@ const styles = StyleSheet.create({
     height: '100%',
     zIndex: -1, // Placer la vidéo en arrière-plan
   },
-  backgroundImage: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    zIndex: -1, // Placer l'image en arrière-plan
-  },
+  // Style pour l'image en paysage
+ backgroundImage: {
+  position: 'absolute',
+  bottom: 0, // Aligne l'image en bas de l'écran
+  left: 0,
+  width: '100%',
+  height: undefined, // La hauteur est calculée automatiquement
+  aspectRatio: 16 / 9, // Format paysage
+  zIndex: -1, // Place l'image derrière les autres éléments
+},
+
 
   overlay: {
     position: 'absolute',
@@ -233,7 +246,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold', // Gras
     color: 'white', // Couleur blanche
     marginBottom: 20, // Espacement entre le texte et le compteur
-    justifyContent : 'center',
+    justifyContent: 'center',
     alignContent: 'center',
   },
 
@@ -286,3 +299,4 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 });
+
