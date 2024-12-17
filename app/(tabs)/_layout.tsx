@@ -1,12 +1,15 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { Platform, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+
+
+const { width } = Dimensions.get('window'); // Obtenir la largeur de l'écran
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -33,9 +36,7 @@ export default function TabLayout() {
         }),
       }}
     >
-      {/* Bouton Burger dans la barre de navigation */}
-     
-
+      {/* Écran Explore */}
       <Tabs.Screen
         name="explore"
         options={{
@@ -44,6 +45,7 @@ export default function TabLayout() {
         }}
       />
 
+      {/* Écran Village */}
       <Tabs.Screen
         name="Village"
         options={{
@@ -52,18 +54,18 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Bouton Home au centre, on le déplace dans la position normale */}
+      {/* Bouton Home centré automatiquement */}
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
           tabBarButton: ({ onPress }) => (
             <TouchableOpacity
-              style={styles.homeButton}
+              style={[styles.homeButton, { left: (width - 325) / 2 }]} // Calcul dynamique pour centrer
               onPress={onPress}
             >
               <Image
-                source={require('@/assets/images/Museau.png')}  // Remplacez par l'image de votre choix
+                source={require('@/assets/images/Museau.png')} // Remplacez par votre image
                 style={styles.homeIcon}
               />
             </TouchableOpacity>
@@ -71,14 +73,16 @@ export default function TabLayout() {
         }}
       />
 
+      {/* Écran Burger */}
       <Tabs.Screen
         name="burger"
         options={{
           title: 'Burger',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="hamburger" color={color} />, // Remplacez par l'icône appropriée
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="hamburger" color={color} />,
         }}
       />
 
+      {/* Écran Notifications */}
       <Tabs.Screen
         name="notifications"
         options={{
@@ -87,6 +91,7 @@ export default function TabLayout() {
         }}
       />
 
+      {/* Écran Profile */}
       <Tabs.Screen
         name="profile"
         options={{
@@ -95,11 +100,11 @@ export default function TabLayout() {
         }}
       />
 
+      {/* Écran Groups */}
       <Tabs.Screen 
         name="popUp_Groups" 
-        options={{tabBarButton: () => null, headerShown: false}}
+        options={{ tabBarButton: () => null, headerShown: false }}
       />
-
     </Tabs>
   );
 }
@@ -108,22 +113,25 @@ const styles = StyleSheet.create({
   homeButton: {
     width: 70,
     height: 70,
-    borderRadius: 35,  // Pour rendre le bouton rond
-    backgroundColor: '#fff',  // Couleur de fond du bouton
+    borderRadius: 35, // Rendre le bouton rond
+    backgroundColor: '#fff', // Couleur de fond
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'absolute',  // Positionnement absolu
-    top: -30,  // Ajuste la position verticale du bouton
-    left: '100%',  // Positionne le bouton à 40% de la largeur de l'écran
-    transform: [{ translateX: -35 }],  // Décale le bouton vers la gauche de la moitié de sa largeur (70 / 2 = 35)
+    position: 'absolute', // Permet le flottement
+    top: -30, // Ajuste la position verticale
     borderWidth: 2,
-    borderColor: 'gray',  // Couleur de la bordure
-    zIndex: 2,  // S'assurer que le bouton soit au-dessus des autres icônes
+    borderColor: 'gray', // Couleur de la bordure
+    zIndex: 2, // S'assurer qu'il est au-dessus des autres éléments
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5, // Pour Android
   },
   homeIcon: {
-    width: '100%',  // L'image prend toute la largeur du bouton
-    height: '100%',  // L'image prend toute la hauteur du bouton
-    borderRadius: 35,  // Assurez-vous que l'image soit ronde en respectant le rayon du bouton
-    resizeMode: 'cover',  // L'image se recadre pour remplir le bouton sans déformation
+    width: '100%', // L'image remplit le bouton
+    height: '100%',
+    borderRadius: 35,
+    resizeMode: 'cover', // Adapte l'image au bouton sans déformation
   },
 });
