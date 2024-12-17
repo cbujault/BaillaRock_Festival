@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity } from 'react
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import GroupModal from './popUp_Groups';
 
+
+// Définir le type pour un groupe
 export type Group = {
   id: string;
   name: string;
@@ -10,20 +12,27 @@ export type Group = {
   startTime: string;
   endTime: string;
   image: string;
-  description : string;
+  description: string;
 };
 
+// Définir les props pour l'écran
 type DayScreenProps = {
   groups: Group[];
-  festivalDate: string;
+  festivalDate: string; // Date au format "YYYY-MM-DD"
 };
 
 function DayScreen({ groups, festivalDate }: DayScreenProps) {
   const flatListRef = useRef<FlatList<Group>>(null);
+
+  // Obtenir l'heure actuelle et la date
   const now = new Date();
-  const today = now.toISOString().split('T')[0];
+  const today = now.toISOString().split('T')[0]; // Format "YYYY-MM-DD"
   const currentTime = now.getHours() + now.getMinutes() / 60;
+
+  // Calculer si on est sur la date actuelle du festival
   const isToday = today === festivalDate;
+
+  // Trouver l'index du groupe en cours (seulement si c'est aujourd'hui)
   const currentIndex = isToday
     ? groups.findIndex((group) => {
         const startTime = parseFloat(group.startTime.split(':')[0]) + parseFloat(group.startTime.split(':')[1]) / 60;
@@ -34,43 +43,84 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
 
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
-
   const openModal = (group: Group) => {
     setSelectedGroup(group);
     setModalVisible(true);
-  };
-
+    };
   const closeModal = () => {
     setSelectedGroup(null);
     setModalVisible(false);
   };
-
+  
+  // Faire défiler automatiquement au groupe en cours si c'est aujourd'hui
   useEffect(() => {
     if (isToday && currentIndex !== -1 && flatListRef.current) {
       flatListRef.current.scrollToIndex({ index: currentIndex, animated: true });
     }
   }, [currentIndex, isToday]);
 
+  // Calculer la progression en pourcentage (curseur latéral)
+  const calculateProgress = () => {
+    const totalGroups = groups.length;
+    const progress = currentIndex === -1 ? totalGroups : currentIndex;
+    return (progress / totalGroups) * 100;
+  };
+
+  // Convertir une heure en décimal
+  const timeToDecimal = (time: string) => {
+    const [hours, minutes] = time.split(':').map((x) => parseFloat(x));
+    return hours + minutes / 60;
+  };
+
+  // Déterminer le style du groupe en fonction de l'heure
+  const getGroupStyle = (group: Group) => {
+    const startTime = timeToDecimal(group.startTime);
+    const endTime = timeToDecimal(group.endTime);
+
+    if (!isToday) {
+      return {}; // Pas de mise en évidence si ce n'est pas aujourd'hui
+    }
+
+    if (currentTime > endTime) {
+      return styles.pastGroup;
+    } else if (currentTime >= startTime && currentTime <= endTime) {
+      return styles.currentGroup;
+    }
+    return styles.futureGroup;
+  };
+
   const renderGroup = ({ item }: { item: Group }) => (
     <TouchableOpacity style={[styles.groupContainer]} onPress={() => openModal(item)}>
-      <Image source={{ uri: item.image }} style={styles.groupImage} />
-      <View style={styles.groupDetails}>
-        <Text style={styles.groupName}>{item.name}</Text>
-        <Text style={styles.groupGenre}>{item.genre}</Text>
-      </View>
+    <Image source={{ uri: item.image }} style={styles.groupImage} />
+    <View style={styles.groupDetails}>
+      <Text style={styles.groupName}>{item.name}</Text>
+      <Text style={styles.groupGenre}>{item.genre}</Text>
+    </View>
       <Text style={styles.groupTime}>
-        {item.startTime} - {item.endTime}
-      </Text>
+      {item.startTime} - {item.endTime}
+    </Text>
     </TouchableOpacity>
-  );
+    );
+    
 
   return (
     <View style={styles.screenContainer}>
+      {/* Curseur d'avancée */}
+      <View style={styles.progressContainer}>
+        {isToday && (
+          <Text style={styles.currentTimeText}>{`${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`}</Text>
+        )}
+        <View style={[styles.progressBar, { height: `${calculateProgress()}%` }]} />
+      </View>
+
+      {/* Liste des groupes */}
       <FlatList
         ref={flatListRef}
         data={groups}
         keyExtractor={(item) => item.id}
         renderItem={renderGroup}
+        getItemLayout={(data, index) => ({ length: 110, offset: 110 * index, index })} // Optimisation pour le défilement
+        initialNumToRender={5}
         contentContainerStyle={styles.listContent}
       />
       <GroupModal visible={isModalVisible} onClose={closeModal} group={selectedGroup} />
@@ -78,26 +128,27 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
   );
 }
 
+// Navigation par onglets pour les deux jours
 const Tab = createMaterialTopTabNavigator();
 
 export default function ConcertTabs() {
   const dayOneGroups: Group[] = [
-    { id: '1', name: 'Group A', genre: 'Rock', startTime: '18:00', endTime: '19:30', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
-    { id: '2', name: 'Group B', genre: 'Jazz', startTime: '19:45', endTime: '21:15', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
-    { id: '3', name: 'Group C', genre: 'Pop', startTime: '21:30', endTime: '23:00', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
-  ];
-
-  const dayTwoGroups: Group[] = [
-    { id: '4', name: 'Group D', genre: 'Metal', startTime: '16:00', endTime: '17:30', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
-    { id: '5', name: 'Group E', genre: 'Blues', startTime: '17:45', endTime: '19:15', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
-    { id: '6', name: 'Group F', genre: 'Electronic', startTime: '19:30', endTime: '21:00', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
-  ];
+  { id: '1', name: 'Group A', genre: 'Rock', startTime: '18:00', endTime: '19:30', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+  { id: '2', name: 'Group B', genre: 'Jazz', startTime: '19:45', endTime: '21:15', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+  { id: '3', name: 'Group C', genre: 'Pop', startTime: '21:30', endTime: '23:00', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+];
+const dayTwoGroups: Group[] = [
+  { id: '4', name: 'Group D', genre: 'Metal', startTime: '16:00', endTime: '17:30', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+  { id: '5', name: 'Group E', genre: 'Blues', startTime: '17:45', endTime: '19:15', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+  { id: '6', name: 'Group F', genre: 'Electronic', startTime: '19:30', endTime: '21:00', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+];
+  
 
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarLabelStyle: { fontSize: 16, fontWeight: 'bold' },
-        tabBarStyle: { height: 50 },
+        tabBarLabelStyle: { fontSize: 16, fontWeight: 'bold' }, // Onglets plus gros
+        tabBarStyle: { height: 60 }, // Augmenter la hauteur des onglets
       }}
     >
       <Tab.Screen name="23 Mai">
@@ -111,8 +162,34 @@ export default function ConcertTabs() {
 }
 
 const styles = StyleSheet.create({
-  screenContainer: { flex: 1 },
-  listContent: { paddingBottom: 10 },
+  screenContainer: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+  progressContainer: {
+    width: 30,
+    backgroundColor: '#ddd',
+    marginVertical: 5,
+    marginHorizontal: 5,
+    borderRadius: 5,
+    overflow: 'hidden',
+    alignItems: 'center',
+  },
+  progressBar: {
+    width: '100%',
+    backgroundColor: '#289009',
+    position: 'absolute',
+    bottom: 0,
+  },
+  currentTimeText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+    marginVertical: 5,
+  },
+  listContent: {
+    paddingBottom: 10,
+  },
   groupContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -122,9 +199,37 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 10,
   },
-  groupImage: { width: 80, height: 80, borderRadius: 10, marginRight: 10 },
-  groupDetails: { flex: 1 },
-  groupName: { fontSize: 18, fontWeight: 'bold' },
-  groupGenre: { fontSize: 14, color: '#555' },
-  groupTime: { fontSize: 16, fontWeight: 'bold', color: '#333' },
+  pastGroup: {
+    opacity: 0.5,
+    backgroundColor: '#e0e0e0',
+  },
+  currentGroup: {
+    backgroundColor: '#ffeb3b',
+  },
+  futureGroup: {
+    opacity: 0.8,
+    backgroundColor: '#fff',
+  },
+  groupImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 10,
+    marginRight: 10,
+  },
+  groupDetails: {
+    flex: 1,
+  },
+  groupName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  groupGenre: {
+    fontSize: 14,
+    color: '#555',
+  },
+  groupTime: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
 });
