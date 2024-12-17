@@ -60,11 +60,19 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
   }, [currentIndex, isToday]);
 
   // Calculer la progression en pourcentage (curseur latéral)
-  const calculateProgress = () => {
+  const calculateProgressHeight = () => {
     const totalGroups = groups.length;
-    const progress = currentIndex === -1 ? totalGroups : currentIndex;
-    return (progress / totalGroups) * 100;
+  
+    // Si aucun groupe ou aucun progrès, la barre reste à 0
+    if (totalGroups === 0) return 0;
+  
+    // Compter les groupes passés et inclure le groupe actuel
+    const completedGroups = currentIndex === -1 ? 0 : currentIndex + 1;
+  
+    // Retourner la hauteur en pourcentage
+    return (completedGroups / totalGroups) * 100;
   };
+  
 
   // Convertir une heure en décimal
   const timeToDecimal = (time: string) => {
@@ -108,9 +116,12 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
       {/* Curseur d'avancée */}
       <View style={styles.progressContainer}>
         {isToday && (
-          <Text style={styles.currentTimeText}>{`${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`}</Text>
+          <Text style={styles.currentTimeText}>
+            {`${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`}
+          </Text>
         )}
-        <View style={[styles.progressBar, { height: `${calculateProgress()}%` }]} />
+        {/* Barre de progression dynamique */}
+        <View style={[styles.progressBar, { height: `${calculateProgressHeight()}%` }]} />
       </View>
 
       {/* Liste des groupes */}
@@ -147,8 +158,27 @@ const dayTwoGroups: Group[] = [
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarLabelStyle: { fontSize: 16, fontWeight: 'bold' }, // Onglets plus gros
-        tabBarStyle: { height: 60 }, // Augmenter la hauteur des onglets
+        swipeEnabled: true, // Active le swipe pour tous les appareils
+        tabBarLabelStyle: { 
+          fontSize: 20, 
+          fontWeight: 'bold', 
+          textTransform: 'none', // Garde les textes tels quels (meilleure lisibilité)
+          color: '#000',
+        },
+        tabBarStyle: { 
+          height: 60, 
+          backgroundColor: '#fff', 
+          elevation: 5, // Ombre pour Android
+          shadowColor: '#000', // Ombre pour iOS
+          shadowOpacity: 0.2, 
+          shadowRadius: 4,
+        },
+        tabBarIndicatorStyle: {
+          backgroundColor: '#289009', // Couleur de l'indicateur d'onglet
+          height: 4, // Épaisseur de l'indicateur
+          borderRadius: 2,
+        },
+        tabBarPressColor: '#c4f1c4', // Animation d'appui
       }}
     >
       <Tab.Screen name="23 Mai">
@@ -167,11 +197,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   progressContainer: {
-    width: 30,
+    width: 20,
     backgroundColor: '#ddd',
     marginVertical: 5,
     marginHorizontal: 5,
-    borderRadius: 5,
+    borderRadius: 8,
     overflow: 'hidden',
     alignItems: 'center',
   },
