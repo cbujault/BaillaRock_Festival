@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, Platform, View, Text, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Video } from 'expo-av'; // Importez Video de expo-av
 import { Linking } from 'react-native'; // Importez Linking pour la redirection vers une URL
+import { Appearance } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
 export default function HomeScreen() {
+
+  Appearance.setColorScheme('dark');
   // Date du festival (23 mai 2025)
   const festivalDate = new Date('2025-05-23T00:00:00');
 
