@@ -154,6 +154,20 @@ export default function HomeScreen() {
           </View>
         </View>
 
+      {/* Plan du site */}
+      <ThemedView style={styles.stepContainer}>
+        <View style={styles.titleContainer}>
+          <ThemedText style={styles.subtitle}>Plan du site</ThemedText>
+        </View>
+        <Image
+          source={require('@/assets/images/Plan_baillarock.png')} // Remplacez par le chemin de votre image du plan
+          style={styles.planImage} // Style pour l'image
+          resizeMode="contain" // Ajustement pour conserver les proportions
+        />
+      </ThemedView>
+
+
+
       {/* Etapes d'instructions */}
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
@@ -332,6 +346,42 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 8,
   },
+
+  planImage: {
+    width: '170%',
+    height: 200, // Ajustez la hauteur selon le contenu
+    alignSelf: 'center',
+    marginTop: 10, // Ajout d'un espace au-dessus de l'image
+  },
+  
+
+  subtitle: {
+    fontSize: 24, // Taille de police plus grande
+    fontWeight: 'bold', // Gras pour un effet plus prononcé
+    color: 'rgb(14, 93, 8)', // Couleur vive (exemple : orange)
+    textAlign: 'center', // Centré horizontalement
+    textTransform: 'uppercase', // Transforme le texte en majuscules
+    marginBottom: 10, // Espacement en bas du titre
+    textShadowColor: 'rgba(0, 0, 0, 0.3)', // Ajout d'une ombre
+    textShadowOffset: { width: 1, height: 1 }, // Décalage de l'ombre
+    textShadowRadius: 2, // Flou de l'ombre
+    fontFamily: 'Arial', // Police personnalisée (remplacez par votre choix si nécessaire)
+  },
+  
+
+  titleContainer: {
+    marginBottom: 20, // Ajouter un espace sous le titre
+  },
+
+  stepContainer: {
+    flex: 1, // Prend tout l'espace disponible
+    justifyContent: 'center', // Centre verticalement les enfants
+    alignItems: 'center', // Centre horizontalement les enfants
+    paddingHorizontal: 20, // Ajout de marges latérales pour ne pas coller aux bords
+    paddingVertical: 30, // Ajouter un espace vertical
+  },
+  
+  
 
   
 });
