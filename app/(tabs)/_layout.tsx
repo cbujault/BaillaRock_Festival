@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { Platform, TouchableOpacity, Image, StyleSheet, View, Dimensions } from 'react-native';
+import React from 'react';
+import { Platform, TouchableOpacity, Image, StyleSheet, View } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import TabBarBackground from '@/components/ui/TabBarBackground';
@@ -10,22 +10,6 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
-  // État pour suivre la largeur de l'écran
-  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
-
-  // Écouteur pour gérer les changements de dimensions (rotation, redimensionnement)
-  useEffect(() => {
-    const onChange = ({ window }) => {
-      setScreenWidth(window.width);
-    };
-
-    Dimensions.addEventListener('change', onChange);
-
-    return () => {
-      Dimensions.removeEventListener('change', onChange);
-    };
-  }, []);
 
   return (
     <Tabs
@@ -46,8 +30,15 @@ export default function TabLayout() {
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
           },
-          default: {
+          android: {
+            position: 'absolute',
             height: 80,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#fff',
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
           },
         }),
       }}
@@ -69,13 +60,13 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Bouton Home centré dynamiquement */}
+      {/* Bouton Home parfaitement centré */}
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
           tabBarButton: ({ onPress }) => (
-            <View style={[styles.centerContainer, { left: screenWidth / 2 - 35 }]}>
+            <View style={styles.centerContainer}>
               <TouchableOpacity style={styles.homeButton} onPress={onPress}>
                 <Image
                   source={require('@/assets/images/Museau.png')}
@@ -122,8 +113,9 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   centerContainer: {
     position: 'absolute',
-    top: -30, // Le bouton dépasse légèrement la barre
-    zIndex: 2,
+    bottom: Platform.OS === 'ios' ? 25 : 20, // Ajuste la position verticale pour iOS et Android
+    alignSelf: 'center', // Centrage horizontal automatique
+    zIndex: 2, // Assure que le bouton est au-dessus de la barre d'onglets
   },
   homeButton: {
     width: 70,
