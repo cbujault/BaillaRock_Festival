@@ -1,75 +1,115 @@
-import React, { useRef, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, FlatList, Dimensions } from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
+import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { NavigationContainer } from '@react-navigation/native';
+import GroupModal from './popUp_Groups';
+
 
 // Définir le type pour un groupe
-type Group = {
+export type Group = {
   id: string;
   name: string;
   genre: string;
-  time: string;
+  startTime: string;
+  endTime: string;
   image: string;
+  description: string;
 };
 
 // Définir les props pour l'écran
 type DayScreenProps = {
   groups: Group[];
+  festivalDate: string; // Date au format "YYYY-MM-DD"
 };
 
-function DayScreen({ groups }: DayScreenProps) {
+function DayScreen({ groups, festivalDate }: DayScreenProps) {
   const flatListRef = useRef<FlatList<Group>>(null);
 
-  // Récupérer l'heure actuelle pour le calcul de progression
-  const currentTime = new Date().getHours() + new Date().getMinutes() / 60;
+  // Obtenir l'heure actuelle et la date
+  const now = new Date();
+  const today = now.toISOString().split('T')[0]; // Format "YYYY-MM-DD"
+  const currentTime = now.getHours() + now.getMinutes() / 60;
 
-  // Trouver l'index du groupe en cours
-  const currentIndex = groups.findIndex((group) => {
-    const groupTime = parseFloat(group.time.split(':')[0]) + parseFloat(group.time.split(':')[1]) / 60;
-    return groupTime >= currentTime;
-  });
+  // Calculer si on est sur la date actuelle du festival
+  const isToday = today === festivalDate;
 
-  // Faire défiler automatiquement au groupe en cours
+  // Trouver l'index du groupe en cours (seulement si c'est aujourd'hui)
+  const currentIndex = isToday
+    ? groups.findIndex((group) => {
+        const startTime = parseFloat(group.startTime.split(':')[0]) + parseFloat(group.startTime.split(':')[1]) / 60;
+        const endTime = parseFloat(group.endTime.split(':')[0]) + parseFloat(group.endTime.split(':')[1]) / 60;
+        return currentTime >= startTime && currentTime <= endTime;
+      })
+    : -1;
+
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const openModal = (group: Group) => {
+    setSelectedGroup(group);
+    setModalVisible(true);
+    };
+  const closeModal = () => {
+    setSelectedGroup(null);
+    setModalVisible(false);
+  };
+  
+  // Faire défiler automatiquement au groupe en cours si c'est aujourd'hui
   useEffect(() => {
-    if (currentIndex !== -1 && flatListRef.current) {
+    if (isToday && currentIndex !== -1 && flatListRef.current) {
       flatListRef.current.scrollToIndex({ index: currentIndex, animated: true });
     }
-  }, [currentIndex]);
+  }, [currentIndex, isToday]);
 
-  // Calculer la progression en pourcentage
+  // Calculer la progression en pourcentage (curseur latéral)
   const calculateProgress = () => {
     const totalGroups = groups.length;
     const progress = currentIndex === -1 ? totalGroups : currentIndex;
     return (progress / totalGroups) * 100;
   };
 
-  const renderGroup = ({ item }: { item: Group }) => {
-    const groupTime = parseFloat(item.time.split(':')[0]) + parseFloat(item.time.split(':')[1]) / 60;
-    const isPast = groupTime < currentTime;
-    const isCurrent = groupTime >= currentTime && groupTime - currentTime <= 1;
-
-    return (
-      <View
-        style={[
-          styles.groupContainer,
-          isPast && styles.pastGroup,
-          isCurrent && styles.currentGroup,
-        ]}
-      >
-        <Image source={{ uri: item.image }} style={styles.groupImage} />
-        <View style={styles.groupDetails}>
-          <Text style={styles.groupName}>{item.name}</Text>
-          <Text style={styles.groupGenre}>{item.genre}</Text>
-        </View>
-        <Text style={styles.groupTime}>{item.time}</Text>
-      </View>
-    );
+  // Convertir une heure en décimal
+  const timeToDecimal = (time: string) => {
+    const [hours, minutes] = time.split(':').map((x) => parseFloat(x));
+    return hours + minutes / 60;
   };
+
+  // Déterminer le style du groupe en fonction de l'heure
+  const getGroupStyle = (group: Group) => {
+    const startTime = timeToDecimal(group.startTime);
+    const endTime = timeToDecimal(group.endTime);
+
+    if (!isToday) {
+      return {}; // Pas de mise en évidence si ce n'est pas aujourd'hui
+    }
+
+    if (currentTime > endTime) {
+      return styles.pastGroup;
+    } else if (currentTime >= startTime && currentTime <= endTime) {
+      return styles.currentGroup;
+    }
+    return styles.futureGroup;
+  };
+
+  const renderGroup = ({ item }: { item: Group }) => (
+    <TouchableOpacity style={[styles.groupContainer]} onPress={() => openModal(item)}>
+    <Image source={{ uri: item.image }} style={styles.groupImage} />
+    <View style={styles.groupDetails}>
+      <Text style={styles.groupName}>{item.name}</Text>
+      <Text style={styles.groupGenre}>{item.genre}</Text>
+    </View>
+      <Text style={styles.groupTime}>
+      {item.startTime} - {item.endTime}
+    </Text>
+    </TouchableOpacity>
+    );
+    
 
   return (
     <View style={styles.screenContainer}>
       {/* Curseur d'avancée */}
       <View style={styles.progressContainer}>
+        {isToday && (
+          <Text style={styles.currentTimeText}>{`${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`}</Text>
+        )}
         <View style={[styles.progressBar, { height: `${calculateProgress()}%` }]} />
       </View>
 
@@ -83,6 +123,7 @@ function DayScreen({ groups }: DayScreenProps) {
         initialNumToRender={5}
         contentContainerStyle={styles.listContent}
       />
+      <GroupModal visible={isModalVisible} onClose={closeModal} group={selectedGroup} />
     </View>
   );
 }
@@ -90,26 +131,31 @@ function DayScreen({ groups }: DayScreenProps) {
 // Navigation par onglets pour les deux jours
 const Tab = createMaterialTopTabNavigator();
 
-export default function TabTwoScreen() {
+export default function ConcertTabs() {
   const dayOneGroups: Group[] = [
-    { id: '1', name: 'Group A', genre: 'Rock', time: '14:00', image: 'https://via.placeholder.com/80' },
-    { id: '2', name: 'Group B', genre: 'Jazz', time: '16:30', image: 'https://via.placeholder.com/80' },
-    { id: '3', name: 'Group C', genre: 'Pop', time: '19:00', image: 'https://via.placeholder.com/80' },
-  ];
-
-  const dayTwoGroups: Group[] = [
-    { id: '4', name: 'Group D', genre: 'Metal', time: '13:00', image: 'https://via.placeholder.com/80' },
-    { id: '5', name: 'Group E', genre: 'Blues', time: '15:30', image: 'https://via.placeholder.com/80' },
-    { id: '6', name: 'Group F', genre: 'Electronic', time: '18:00', image: 'https://via.placeholder.com/80' },
-  ];
+  { id: '1', name: 'Group A', genre: 'Rock', startTime: '18:00', endTime: '19:30', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+  { id: '2', name: 'Group B', genre: 'Jazz', startTime: '19:45', endTime: '21:15', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+  { id: '3', name: 'Group C', genre: 'Pop', startTime: '21:30', endTime: '23:00', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+];
+const dayTwoGroups: Group[] = [
+  { id: '4', name: 'Group D', genre: 'Metal', startTime: '16:00', endTime: '17:30', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+  { id: '5', name: 'Group E', genre: 'Blues', startTime: '17:45', endTime: '19:15', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+  { id: '6', name: 'Group F', genre: 'Electronic', startTime: '19:30', endTime: '21:00', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+];
+  
 
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Day 1">
-        {() => <DayScreen groups={dayOneGroups} />}
+    <Tab.Navigator
+      screenOptions={{
+        tabBarLabelStyle: { fontSize: 16, fontWeight: 'bold' }, // Onglets plus gros
+        tabBarStyle: { height: 60 }, // Augmenter la hauteur des onglets
+      }}
+    >
+      <Tab.Screen name="23 Mai">
+        {() => <DayScreen groups={dayOneGroups} festivalDate="2025-05-23" />}
       </Tab.Screen>
-      <Tab.Screen name="Day 2">
-        {() => <DayScreen groups={dayTwoGroups} />}
+      <Tab.Screen name="24 Mai">
+        {() => <DayScreen groups={dayTwoGroups} festivalDate="2025-05-24" />}
       </Tab.Screen>
     </Tab.Navigator>
   );
@@ -121,18 +167,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   progressContainer: {
-    width: 10,
+    width: 30,
     backgroundColor: '#ddd',
     marginVertical: 5,
     marginHorizontal: 5,
     borderRadius: 5,
     overflow: 'hidden',
+    alignItems: 'center',
   },
   progressBar: {
     width: '100%',
-    backgroundColor: '#ff6347',
+    backgroundColor: '#289009',
     position: 'absolute',
     bottom: 0,
+  },
+  currentTimeText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+    marginVertical: 5,
   },
   listContent: {
     paddingBottom: 10,
@@ -152,6 +205,10 @@ const styles = StyleSheet.create({
   },
   currentGroup: {
     backgroundColor: '#ffeb3b',
+  },
+  futureGroup: {
+    opacity: 0.8,
+    backgroundColor: '#fff',
   },
   groupImage: {
     width: 80,

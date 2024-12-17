@@ -94,6 +94,12 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="user" color={color} />,
         }}
       />
+
+      <Tabs.Screen 
+        name="popUp_Groups" 
+        options={{tabBarButton: () => null, headerShown: false}}
+      />
+
     </Tabs>
   );
 }
