@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Platform, View, Text, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Platform, View, Text, ScrollView, Dimensions, TouchableOpacity, Image } from 'react-native';
 import { Video } from 'expo-av'; // Importez Video de expo-av
 import { Linking } from 'react-native'; // Importez Linking pour la redirection vers une URL
 import { Appearance } from 'react-native';
@@ -21,6 +21,8 @@ export default function HomeScreen() {
     minutes: 0,
     seconds: 0,
   });
+
+  const [isScrolled, setIsScrolled] = useState(false); // Nouvel état pour savoir si l'utilisateur a défilé
 
   // Mise à jour du compte à rebours chaque seconde
   useEffect(() => {
@@ -57,19 +59,38 @@ export default function HomeScreen() {
     Linking.openURL('https://www.instagram.com/baillarock_unitedwefest/'); // Remplacez 'http://xxxxx' par l'URL souhaitée
   };
 
+  // Fonction pour gérer le défilement
+  const handleScroll = (event) => {
+    const contentOffsetY = event.nativeEvent.contentOffset.y;
+    if (contentOffsetY > 0 && !isScrolled) {
+      setIsScrolled(true);
+    } else if (contentOffsetY <= 0 && isScrolled) {
+      setIsScrolled(false);
+    }
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <ScrollView contentContainerStyle={styles.scrollContainer} onScroll={handleScroll} scrollEventThrottle={16}>
       <View style={[styles.imageContainer, { height: screenHeight }]}>
-        {/* Utilisez le composant Video d'Expo */}
-        <Video
-          source={require('@/assets/videos/videohomepage.mp4')} // Remplacez avec votre propre fichier vidéo
-          style={styles.backgroundVideo}
-          resizeMode="cover" // Recouvre l'ensemble de l'écran
-          shouldPlay // Commence la lecture
-          isLooping // Répète la vidéo en boucle
-          isMuted // Vidéo sans son
-        />
-        {/* Texte et compte à rebours au-dessus de la vidéo */}
+        {/* Afficher la vidéo ou l'image en fonction de l'état isScrolled */}
+        {isScrolled ? (
+          <Image
+            source={require('@/assets/images/Dragon.png')} // Remplacez par votre image
+            style={styles.backgroundImage}
+            resizeMode="cover"
+          />
+        ) : (
+          <Video
+            source={require('@/assets/videos/videohomepage.mp4')} // Remplacez avec votre propre fichier vidéo
+            style={styles.backgroundVideo}
+            resizeMode="cover" // Recouvre l'ensemble de l'écran
+            shouldPlay // Commence la lecture
+            isLooping // Répète la vidéo en boucle
+            isMuted // Vidéo sans son
+          />
+        )}
+        
+        {/* Texte et compte à rebours au-dessus de la vidéo ou de l'image */}
         <View style={styles.overlay}>
           {/* Texte du festival ajouté */}
           <Text style={styles.TitleText}>BAILLAROCK FESTIVAL</Text>
@@ -129,9 +150,33 @@ export default function HomeScreen() {
           Tap the Explore tab to learn more about what's included in this starter app.
         </ThemedText>
       </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
+        <ThemedText>
+          Tap the Explore tab to learn more about what's included in this starter app.
+        </ThemedText>
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
+        <ThemedText>
+          Tap the Explore tab to learn more about what's included in this starter app.
+        </ThemedText>
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
+        <ThemedText>
+          Tap the Explore tab to learn more about what's included in this starter app.
+        </ThemedText>
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
+        <ThemedText>
+          Tap the Explore tab to learn more about what's included in this starter app.
+        </ThemedText>
+      </ThemedView>
 
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
+        <ThemedText type="subtitle">COMMMMMMME ON</ThemedText>
         <ThemedText>
           When you're ready, run{' '}
           <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
@@ -161,6 +206,14 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     zIndex: -1, // Placer la vidéo en arrière-plan
+  },
+  backgroundImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: -1, // Placer l'image en arrière-plan
   },
 
   overlay: {
