@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import GroupModal from '../popUp_Groups';
+import { dayOneGroups, dayTwoGroups } from '../../data/groupsData';
 
 const { width, height } = Dimensions.get('window');
 
@@ -173,42 +174,14 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
 const Tab = createMaterialTopTabNavigator();
 
 export default function ConcertTabs() {
-  const dayOneGroups: Group[] = [
-  { id: '1', name: 'Group A', genre: 'Rock', startTime: '18:00', endTime: '19:30', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
-  { id: '2', name: 'Group B', genre: 'Jazz', startTime: '19:45', endTime: '21:15', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
-  { id: '3', name: 'Group C', genre: 'Pop', startTime: '21:30', endTime: '23:00', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
-];
-const dayTwoGroups: Group[] = [
-  { id: '4', name: 'Group D', genre: 'Metal', startTime: '16:00', endTime: '17:30', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
-  { id: '5', name: 'Group E', genre: 'Blues', startTime: '17:45', endTime: '19:15', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
-  { id: '6', name: 'Group F', genre: 'Electronic', startTime: '19:30', endTime: '21:00', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
-];
-  
-
   return (
     <Tab.Navigator
       screenOptions={{
-        swipeEnabled: true, // Active le swipe pour tous les appareils
-        tabBarLabelStyle: { 
-          fontSize: 20, 
-          fontWeight: 'bold', 
-          textTransform: 'none', // Garde les textes tels quels (meilleure lisibilité)
-          color: '#000',
-        },
-        tabBarStyle: { 
-          height: 60, 
-          backgroundColor: '#fff', 
-          elevation: 5, // Ombre pour Android
-          shadowColor: '#000', // Ombre pour iOS
-          shadowOpacity: 0.2, 
-          shadowRadius: 4,
-        },
-        tabBarIndicatorStyle: {
-          backgroundColor: '#289009', // Couleur de l'indicateur d'onglet
-          height: 4, // Épaisseur de l'indicateur
-          borderRadius: 2,
-        },
-        tabBarPressColor: '#c4f1c4', // Animation d'appui
+        swipeEnabled: true,
+        tabBarLabelStyle: { fontSize: 20, fontWeight: 'bold', textTransform: 'none', color: '#000' },
+        tabBarStyle: { height: 60, backgroundColor: '#fff', elevation: 5, shadowColor: '#000', shadowOpacity: 0.2,shadowRadius: 4 },
+        tabBarIndicatorStyle: { backgroundColor: '#289009', height: 4, borderRadius: 2 },
+        tabBarPressColor: '#c4f1c4',
       }}
     >
       <Tab.Screen name="23 Mai">
