@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import GroupModal from './popUp_Groups';
+import GroupModal from '../popUp_Groups';
 
 
 // Définir le type pour un groupe
