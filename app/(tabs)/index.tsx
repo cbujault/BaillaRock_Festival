@@ -12,7 +12,7 @@ export default function HomeScreen() {
 
   Appearance.setColorScheme('dark');
   // Date du festival (23 mai 2025)
-  const festivalDate = new Date('2025-05-23T00:00:00');
+  const festivalDate = new Date('2025-05-23T18:00:00');
   const router = useRouter(); // Hook pour la navigation
 
 
@@ -29,25 +29,29 @@ export default function HomeScreen() {
 
   // Mise à jour du compte à rebours chaque seconde
   useEffect(() => {
-    const interval = setInterval(() => {
+    const updateCountdown = () => {
       const now = new Date();
       const timeDifference = festivalDate - now;
-
+    
       if (timeDifference <= 0) {
-        clearInterval(interval);
-        setTimeExpired(true); // Compteur expiré
+        setTimeExpired(true);
       } else {
         const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
         const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDifference % (1000 * 60)) / (1000 * 60));
+        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-
+    
         setTimeLeft({ days, hours, minutes, seconds });
       }
-    }, 1000);
-
+    };
+    
+  
+    updateCountdown(); // Mise à jour initiale
+    const interval = setInterval(updateCountdown, 1000);
+  
     return () => clearInterval(interval);
   }, []);
+  
 
   // Récupérer la hauteur de l'écran
   const screenHeight = Dimensions.get('window').height;
