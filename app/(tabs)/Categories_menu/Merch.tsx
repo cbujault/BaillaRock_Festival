@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { ThemedView, ThemedText } from './YourThemedComponents'; // Remplacez par l'import correct
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+
 
 export default function Merch() {
   return (
