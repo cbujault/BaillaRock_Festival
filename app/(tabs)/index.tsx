@@ -235,13 +235,13 @@ export default function HomeScreen() {
       <View style={styles.socialMediaContainer}>
       <Text style={styles.socialMediaTitle}>Suivez-nous sur les réseaux sociaux</Text>
       <View style={styles.socialMediaIcons}>
-        <TouchableOpacity onPress={() => Linking.openURL('@/assets/icon_reseau/instagram.png')}>
+        <TouchableOpacity onPress={() => Linking.openURL('https://www.instagram.com/baillarock_unitedwefest/')}>
           <Image
             source={require('@/assets/icons/instagram.png')} // Ajoutez une icône Instagram dans vos assets
             style={styles.socialMediaIcon}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => Linking.openURL('@/assets/icon_reseau/facebook.png')}>
+        <TouchableOpacity onPress={() => Linking.openURL('https://www.facebook.com/')}>
           <Image
             source={require('@/assets/icons/facebook.png')} // Ajoutez une icône Facebook dans vos assets
             style={styles.socialMediaIcon}
