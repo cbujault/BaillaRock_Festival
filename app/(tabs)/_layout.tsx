@@ -55,7 +55,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="Village"
+        name="village"
         options={{
           title: 'Village',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="home" color={color} />,
@@ -80,6 +80,13 @@ export default function TabLayout() {
         }}
       />
 
+      <Tabs.Screen
+        name="Merch"
+        options={{
+          title: 'Merch',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="hamburger" color={color} />,
+        }}
+      />
 
     <Tabs.Screen
         name="MenuBurger"
