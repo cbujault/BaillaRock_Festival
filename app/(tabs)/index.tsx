@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, Platform, View, Text, ScrollView, Dimensions, TouchableOpacity, Image } from 'react-native';
-import { Video } from 'expo-av'; // Importez Video de expo-av
-import { Linking } from 'react-native'; // Importez Linking pour la redirection vers une URL
+import { Video } from 'expo-av';
+import { Linking } from 'react-native';
 import { Appearance } from 'react-native';
 import { useRouter } from 'expo-router'; 
 
@@ -13,8 +13,7 @@ export default function HomeScreen() {
   Appearance.setColorScheme('dark');
   // Date du festival (23 mai 2025)
   const festivalDate = new Date('2025-05-23T18:00:00');
-  const router = useRouter(); // Hook pour la navigation
-
+  const router = useRouter();
 
   // Etat du compte à rebours
   const [timeLeft, setTimeLeft] = useState({

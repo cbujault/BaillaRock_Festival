@@ -1,6 +1,6 @@
 import { Products } from '../../data/MerchData';
 import React from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -12,7 +12,7 @@ export type MerchProducts = {
   size: string; // Taille ou dimension du produit
 };
 
-function MerchScreen() {
+export default function Merch() {
   // Fonction pour rendre un produit dans la liste
   const renderProduct = ({ item }: { item: MerchProducts }) => (
     <View style={styles.productContainer}>
