@@ -231,30 +231,44 @@ export default function HomeScreen() {
         </ThemedText>
       </ThemedView>
 
+      <ThemedView style={styles.stepContainer}>
+  <View style={styles.titleContainer}>
+    <ThemedText style={styles.subtitle}>Suivez-nous sur les réseaux sociaux</ThemedText>
+  </View>
+  <View style={styles.socialMediaIcons}>
+    <TouchableOpacity onPress={() => Linking.openURL('https://www.instagram.com/baillarock_unitedwefest/')}>
+      <Image
+        source={require('@/assets/images/Icon_reseau/instagram.png')} // Chemin de l'icône Instagram
+        style={styles.socialMediaIcon}
+      />
+    </TouchableOpacity>
+    <TouchableOpacity onPress={() => Linking.openURL('https://www.facebook.com/')}>
+      <Image
+        source={require('@/assets/images/Icon_reseau/facebook.png')} // Chemin de l'icône Facebook
+        style={styles.socialMediaIcon}
+      />
+    </TouchableOpacity>
+    <TouchableOpacity onPress={() => Linking.openURL('https://www.youtube.com/')}>
+      <Image
+        source={require('@/assets/images/Icon_reseau/youtube.png')} // Chemin de l'icône YouTube
+        style={styles.socialMediaIcon}
+      />
+    </TouchableOpacity>
+    <TouchableOpacity onPress={() => Linking.openURL('https://www.baillarockfestival.fr/')}>
+      <Image
+        source={require('@/assets/images/Icon_reseau/web-link.png')} // Chemin de l'icône Web
+        style={styles.socialMediaIcon}
+      />
+    </TouchableOpacity>
+  </View>
+</ThemedView>
 
-      <View style={styles.socialMediaContainer}>
-      <Text style={styles.socialMediaTitle}>Suivez-nous sur les réseaux sociaux</Text>
-      <View style={styles.socialMediaIcons}>
-        <TouchableOpacity onPress={() => Linking.openURL('https://www.instagram.com/baillarock_unitedwefest/')}>
-          <Image
-            source={require('@/assets/images/Icon_reseau/instagram.png')} // Ajoutez une icône Instagram dans vos assets
-            style={styles.socialMediaIcon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => Linking.openURL('https://www.facebook.com/')}>
-          <Image
-            source={require('@/assets/images/Icon_reseau/facebook.png')} // Ajoutez une icône Facebook dans vos assets
-            style={styles.socialMediaIcon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => Linking.openURL('https://www.youtube.com/')}>
-          <Image
-            source={require('@/assets/images/Icon_reseau/youtube.png')} // Ajoutez une icône LinkedIn dans vos assets
-            style={styles.socialMediaIcon}
-          />
-        </TouchableOpacity>
-      </View>
-    </View>
+
+    <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle"></ThemedText>
+        <ThemedText>
+        </ThemedText>
+      </ThemedView>
 
     </ScrollView>
   );
