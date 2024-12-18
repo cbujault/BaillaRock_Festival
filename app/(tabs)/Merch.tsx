@@ -12,7 +12,7 @@ export default function Merch() {
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 2: Explore</ThemedText>
         <ThemedText>
-          AHHHHHHHHHHHHHHHHH Tap the Explore tab to learn more about what's included in this starter app.
+          AHHHHHHHHHHHHHHHHH .
         </ThemedText>
       </ThemedView>
     </View>
