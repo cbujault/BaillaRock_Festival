@@ -230,6 +230,32 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </ThemedView>
+
+
+      <View style={styles.socialMediaContainer}>
+      <Text style={styles.socialMediaTitle}>Suivez-nous sur les réseaux sociaux</Text>
+      <View style={styles.socialMediaIcons}>
+        <TouchableOpacity onPress={() => Linking.openURL('@/assets/icon_reseau/instagram.png')}>
+          <Image
+            source={require('@/assets/icons/instagram.png')} // Ajoutez une icône Instagram dans vos assets
+            style={styles.socialMediaIcon}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => Linking.openURL('@/assets/icon_reseau/facebook.png')}>
+          <Image
+            source={require('@/assets/icons/facebook.png')} // Ajoutez une icône Facebook dans vos assets
+            style={styles.socialMediaIcon}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => Linking.openURL('https://www.youtube.com/')}>
+          <Image
+            source={require('@/assets/icon_reseau/youtube.png')} // Ajoutez une icône LinkedIn dans vos assets
+            style={styles.socialMediaIcon}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+
     </ScrollView>
   );
 }
@@ -384,6 +410,35 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20, // Ajout de marges latérales pour ne pas coller aux bords
     paddingVertical: 30, // Ajouter un espace vertical
   },
+
+  socialMediaContainer: {
+    marginTop: 20, // Espacement au-dessus de la section
+    marginBottom: 40, // Espacement en bas de la section
+    alignItems: 'center', // Centre les éléments horizontalement
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fond légèrement sombre
+    borderRadius: 10, // Coins arrondis
+  },
+  
+  socialMediaTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff', // Texte blanc
+    marginBottom: 10, // Espacement entre le titre et les icônes
+  },
+  
+  socialMediaIcons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '60%', // Ajustez la largeur de la zone des icônes
+  },
+  
+  socialMediaIcon: {
+    width: 40,
+    height: 40, // Taille des icônes
+    marginHorizontal: 10, // Espacement entre les icônes
+  },
+  
   
   
 
