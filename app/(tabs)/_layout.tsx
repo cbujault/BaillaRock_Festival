@@ -82,7 +82,7 @@ export default function TabLayout() {
 
 
     <Tabs.Screen
-        name="burger"
+        name="MenuBurger"
         options={{
           title: 'Burger',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="hamburger" color={color} />,

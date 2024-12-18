@@ -237,19 +237,19 @@ export default function HomeScreen() {
       <View style={styles.socialMediaIcons}>
         <TouchableOpacity onPress={() => Linking.openURL('https://www.instagram.com/baillarock_unitedwefest/')}>
           <Image
-            source={require('@/assets/icons/instagram.png')} // Ajoutez une icône Instagram dans vos assets
+            source={require('@/assets/images/Icon_reseau/instagram.png')} // Ajoutez une icône Instagram dans vos assets
             style={styles.socialMediaIcon}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => Linking.openURL('https://www.facebook.com/')}>
           <Image
-            source={require('@/assets/icons/facebook.png')} // Ajoutez une icône Facebook dans vos assets
+            source={require('@/assets/images/Icon_reseau/facebook.png')} // Ajoutez une icône Facebook dans vos assets
             style={styles.socialMediaIcon}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => Linking.openURL('https://www.youtube.com/')}>
           <Image
-            source={require('@/assets/icon_reseau/youtube.png')} // Ajoutez une icône LinkedIn dans vos assets
+            source={require('@/assets/images/Icon_reseau/youtube.png')} // Ajoutez une icône LinkedIn dans vos assets
             style={styles.socialMediaIcon}
           />
         </TouchableOpacity>
