@@ -1,278 +1,197 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Platform, View, Text, ScrollView, Dimensions, TouchableOpacity, Image } from 'react-native';
-import { Video } from 'expo-av'; // Importez Video de expo-av
-import { Linking } from 'react-native'; // Importez Linking pour la redirection vers une URL
+import {
+  StyleSheet,
+  Platform,
+  View,
+  Text,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+  Linking,
+} from 'react-native';
+import { Video } from 'expo-av';
 import { Appearance } from 'react-native';
-import { useRouter } from 'expo-router'; 
+import { useRouter } from 'expo-router';
+import { homeConfig } from '@/config/Config_HomePage';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
 export default function HomeScreen() {
-
   Appearance.setColorScheme('dark');
-  // Date du festival (23 mai 2025)
-  const festivalDate = new Date('2025-05-23T18:00:00');
-  const router = useRouter(); // Hook pour la navigation
 
+  // Date du festival
+  const festivalDate = new Date(homeConfig.festivalDate);
+  const router = useRouter();
 
-  // Etat du compte à rebours
+  // État du compte à rebours
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
-
   const [timeExpired, setTimeExpired] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false); // Nouvel état pour savoir si l'utilisateur a défilé
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // Mise à jour du compte à rebours chaque seconde
+  // Mise à jour du compte à rebours
   useEffect(() => {
     const updateCountdown = () => {
       const now = new Date();
-      const timeDifference = festivalDate - now;
-    
+      const timeDifference = festivalDate.getTime() - now.getTime();
+  
       if (timeDifference <= 0) {
-        setTimeExpired(true);
+        setTimeExpired(true); // Cela met à jour `timeExpired`
       } else {
         const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
         const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-    
-        setTimeLeft({ days, hours, minutes, seconds });
+  
+        setTimeLeft({ days, hours, minutes, seconds }); // Cela met à jour `timeLeft`
       }
     };
-    
   
-    updateCountdown(); // Mise à jour initiale
     const interval = setInterval(updateCountdown, 1000);
   
+    // Nettoyage de l'intervalle
     return () => clearInterval(interval);
-  }, []);
+  }, [festivalDate]); // Ajoutez seulement `festivalDate` comme dépendance si nécessaire
   
 
   // Récupérer la hauteur de l'écran
   const screenHeight = Dimensions.get('window').height;
 
-  // Fonction pour ouvrir un site web
-  const openWebsite = () => {
-    Linking.openURL('https://www.instagram.com/baillarock_unitedwefest/'); // Remplacez 'http://xxxxx' par l'URL souhaitée
+  // Gestion du défilement
+  const handleScroll = (event: any) => {
+    const contentOffsetY = event.nativeEvent.contentOffset.y;
+    const threshold = 500;
+    const thresholdReturn = 0;
+
+    if (contentOffsetY > threshold && !isScrolled) {
+      setIsScrolled(true);
+    } else if (contentOffsetY < thresholdReturn && isScrolled) {
+      setIsScrolled(false);
+    }
   };
 
+  // Redirection vers une URL ou une page
   const navigateToExplore = () => {
-    router.push('/(tabs)/explore'); // Redirige vers l'onglet Explore
+    router.push('/(tabs)/explore');
   };
 
-  // Fonction pour gérer le défilement avec des seuils asymétriques
-    const handleScroll = (event) => {
-      const contentOffsetY = event.nativeEvent.contentOffset.y;
-      
-      const threshold = 500; // Seuil pour passer à l'image
-      const thresholdReturn = 0; // Seuil pour revenir à la vidéo
-      
-      // Vérification si on descend assez pour passer à l'image
-      if (contentOffsetY > threshold && !isScrolled) {
-        setIsScrolled(true);
-      } 
-      // Vérification si on remonte au-dessus du seuil pour revenir à la vidéo
-      else if (contentOffsetY < thresholdReturn && isScrolled) {
-        setIsScrolled(false);
-      }
-    };
-    
-  
-    return (
-      <ScrollView contentContainerStyle={styles.scrollContainer} onScroll={handleScroll} scrollEventThrottle={16}>
-        <View style={[styles.imageContainer, { height: screenHeight }]}>
-          {/* Afficher la vidéo ou l'image en fonction de l'état isScrolled */}
-          {isScrolled ? (
-            <Image
-              source={require('@/assets/images/Dragon.png')} // Remplacez par votre image
-              style={styles.backgroundImage}
-              resizeMode="cover"
-            />
+  // Rendu principal
+  return (
+    <ScrollView
+    contentContainerStyle={styles.scrollContainer}
+    onScroll={handleScroll}
+    scrollEventThrottle={16}
+  >
+    <View style={[styles.imageContainer, { height: screenHeight }]}>
+      {/* Affichage conditionnel avec les assets de la configuration */}
+      {isScrolled ? (
+        <Image
+          source={homeConfig.assets.image} // Image depuis Config_HomePage
+          style={styles.backgroundImage}
+          resizeMode="cover"
+        />
+      ) : (
+        <Video
+          source={homeConfig.assets.video} // Vidéo depuis Config_HomePage
+          style={styles.backgroundVideo}
+          resizeMode="cover"
+          shouldPlay
+          isLooping
+          isMuted
+        />
+      )}
+
+        <View style={styles.overlay}>
+          <Text style={styles.TitleText}>{homeConfig.festivalName}</Text>
+          {timeExpired ? (
+            <>
+              <Text style={styles.expiredText}>{homeConfig.messages.countdownExpired}</Text>
+              <TouchableOpacity style={styles.button} onPress={navigateToExplore}>
+                <Text style={styles.buttonText}>{homeConfig.messages.viewSchedule}</Text>
+              </TouchableOpacity>
+            </>
           ) : (
-            <Video
-              source={require('@/assets/videos/videohomepage.mp4')} // Remplacez avec votre propre fichier vidéo
-              style={styles.backgroundVideo}
-              resizeMode="cover" // Recouvre l'ensemble de l'écran
-              shouldPlay // Commence la lecture
-              isLooping // Répète la vidéo en boucle
-              isMuted // Vidéo sans son
-            />
-          )}
-          
-          {/* Texte et compte à rebours au-dessus de la vidéo ou de l'image */}
-          <View style={styles.overlay}>
-            {/* Texte du festival ajouté */}
-            <Text style={styles.TitleText}>BAILLAROCK FESTIVAL</Text>
-            
-            {/* Affichage dynamique */}
-            {timeExpired ? (
-              <>
-                {/* Texte lorsque le temps est écoulé */}
-                <Text style={styles.expiredText}>C'est maintenant !</Text>
-                {/* Bouton Voir la programmation */}
-                <TouchableOpacity style={styles.button} onPress={navigateToExplore}>
-                  <Text style={styles.buttonText}>Voir la programmation</Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <>
-                {/* Affichage du compte à rebours */}
-                <View style={styles.countdownContainer}>
-                  <View style={styles.countdownRow}>
-                    <View style={styles.countdownItem}>
-                      <Text style={styles.countdownNumber}>{timeLeft.days}</Text>
-                      <Text style={styles.countdownLabel}>Jours</Text>
+            <>
+              <View style={styles.countdownContainer}>
+                <View style={styles.countdownRow}>
+                  {['days', 'hours', 'minutes', 'seconds'].map((unit) => (
+                    <View key={unit} style={styles.countdownItem}>
+                      <Text style={styles.countdownNumber}>{timeLeft[unit]}</Text>
+                      <Text style={styles.countdownLabel}>{unit.charAt(0).toUpperCase() + unit.slice(1)}</Text>
                     </View>
-                    <View style={styles.countdownItem}>
-                      <Text style={styles.countdownNumber}>{timeLeft.hours}</Text>
-                      <Text style={styles.countdownLabel}>Heures</Text>
-                    </View>
-                    <View style={styles.countdownItem}>
-                      <Text style={styles.countdownNumber}>{timeLeft.minutes}</Text>
-                      <Text style={styles.countdownLabel}>Minutes</Text>
-                    </View>
-                    <View style={styles.countdownItem}>
-                      <Text style={styles.countdownNumber}>{timeLeft.seconds}</Text>
-                      <Text style={styles.countdownLabel}>Secondes</Text>
-                    </View>
-                  </View>
+                  ))}
                 </View>
-
-                {/* Adresse en italique, au-dessus du bouton */}
-                <Text style={styles.addressText}>Saint Georges Les Baillargeaux</Text>
-    
-                {/* Bouton Acheter les billets */}
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => Linking.openURL('https://www.instagram.com/baillarock_unitedwefest/')}
-                >
-                  <Text style={styles.buttonText}>Achetez vos billets !</Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </View>
+              </View>
+              <Text style={styles.addressText}>{homeConfig.location}</Text>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => Linking.openURL(homeConfig.socialMediaLinks.instagram)}
+              >
+                <Text style={styles.buttonText}>{homeConfig.messages.buyTickets}</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
+      </View>
 
-      {/* Plan du site */}
       <ThemedView style={styles.stepContainer}>
         <View style={styles.titleContainer}>
           <ThemedText style={styles.subtitle}>Plan du site</ThemedText>
         </View>
         <Image
-          source={require('@/assets/images/Plan_baillarock.png')} // Remplacez par le chemin de votre image du plan
-          style={styles.planImage} // Style pour l'image
-          resizeMode="contain" // Ajustement pour conserver les proportions
+          source={homeConfig.assets.siteMap}
+          style={styles.planImage}
+          resizeMode="contain"
         />
       </ThemedView>
 
+      <ThemedView style={styles.stepContainer}>
+        <View style={styles.titleContainer}>
+          <ThemedText style={styles.subtitle}>{homeConfig.messages.socialMediaTitle}</ThemedText>
+        </View>
+        <View style={styles.socialMediaIcons}>
+          {Object.keys(homeConfig.socialMediaLinks).map((key) => (
+            <TouchableOpacity
+              key={key}
+              onPress={() => Linking.openURL(homeConfig.socialMediaLinks[key as keyof typeof homeConfig.socialMediaLinks])}
+            >
+              <Image
+                source={homeConfig.assets.socialIcons[key as keyof typeof homeConfig.assets.socialIcons]}
+                style={styles.socialMediaIcon}
+              />
+            </TouchableOpacity>
+          ))}
+        </View>
 
 
-      {/* Etapes d'instructions */}
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
+        {/* Titre de la section */}
+      <ThemedText type="title" style={styles.title}>
+      </ThemedText>
 
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
+      {/* Contenu descriptif */}
+      <ThemedText style={styles.text}>
+      </ThemedText>
 
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">COMMMMMMME ON</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
+      {/* Informations complémentaires */}
+      <ThemedText style={styles.text}>
+      </ThemedText>
+      <ThemedText style={styles.text}>
+      </ThemedText>
+
+      <ThemedText style={styles.text}>
+      </ThemedText>
+
       </ThemedView>
-
-      <ThemedView style={styles.stepContainer}>
-  <View style={styles.titleContainer}>
-    <ThemedText style={styles.subtitle}>Suivez-nous sur les réseaux sociaux</ThemedText>
-  </View>
-  <View style={styles.socialMediaIcons}>
-    <TouchableOpacity onPress={() => Linking.openURL('https://www.instagram.com/baillarock_unitedwefest/')}>
-      <Image
-        source={require('@/assets/images/Icon_reseau/instagram.png')} // Chemin de l'icône Instagram
-        style={styles.socialMediaIcon}
-      />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => Linking.openURL('https://www.facebook.com/')}>
-      <Image
-        source={require('@/assets/images/Icon_reseau/facebook.png')} // Chemin de l'icône Facebook
-        style={styles.socialMediaIcon}
-      />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => Linking.openURL('https://www.youtube.com/')}>
-      <Image
-        source={require('@/assets/images/Icon_reseau/youtube.png')} // Chemin de l'icône YouTube
-        style={styles.socialMediaIcon}
-      />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => Linking.openURL('https://www.baillarockfestival.fr/')}>
-      <Image
-        source={require('@/assets/images/Icon_reseau/web-link.png')} // Chemin de l'icône Web
-        style={styles.socialMediaIcon}
-      />
-    </TouchableOpacity>
-  </View>
-</ThemedView>
-
-
-    <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle"></ThemedText>
-        <ThemedText>
-        </ThemedText>
-      </ThemedView>
-
     </ScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   // Conteneur global pour le défilement
