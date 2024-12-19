@@ -162,23 +162,13 @@ export default function HomeScreen() {
           })}
         </View>
         {/* Contenu descriptif */}
-      <ThemedText style={styles.text}>
+      <ThemedText style={styles.stepContainer}>
       </ThemedText>
 
       {/* Informations complémentaires */}
-      <ThemedText style={styles.text}>
+      <ThemedText style={styles.stepContainer}>
       </ThemedText>
-      <ThemedText style={styles.text}>
-      </ThemedText>
-      {/* Contenu descriptif */}
-      <ThemedText style={styles.text}>
-      </ThemedText>
-
-      {/* Informations complémentaires */}
-      <ThemedText style={styles.text}>
-      </ThemedText>
-      <ThemedText style={styles.text}>
-      </ThemedText>
+  
 
       </ThemedView>
     </ScrollView>

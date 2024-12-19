@@ -8,12 +8,12 @@ export default function Menu() {
 
   // Fonction pour naviguer vers Merch
   const handleNavigateToMerch = () => {
-    router.push('./Categories_menu/Merch');
+    router.push('../Categories_menu/Merch');
   };
 
   // Fonction pour naviguer vers Partenaires
   const handleNavigateToPartenaires = () => {
-    router.push('./Categories_menu/Partenaire');
+    router.push('../Categories_menu/Partenaire');
   };
 
   return (

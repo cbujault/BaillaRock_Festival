@@ -1,83 +1,57 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Platform, View, Text, ScrollView, Dimensions, TouchableOpacity, Image, Linking } from 'react-native';
+import { Video } from 'expo-av'; // Importez Video de expo-av
+import { homeConfig } from '@/config/Config_HomePage'; // Configuration des assets et autres
+
+
 
 export default function HomeScreen() {
+  // Mise à jour du compte à rebours
+
+  // Récupérer la hauteur de l'écran
+  const screenHeight = Dimensions.get('window').height;
+
+  // Define handleScroll function (example)
+  const handleScroll = (event) => {
+    // Handle the scroll event if needed (e.g., logging the scroll position)
+    console.log(event.nativeEvent.contentOffset.y);
+  };
+
+  // Rendu principal
   return (
-    <View style={styles.container}>
-      {/* Image du festival */}
-      <Image
-        source={require('@/assets/images/Dragon.png')}
-        style={styles.image}
+    <ScrollView
+      contentContainerStyle={styles.scrollContainer}
+      onScroll={handleScroll}
+      scrollEventThrottle={16}
+    >
+      <View style={[styles.imageContainer, { height: screenHeight }]}>
+        <Video
+          source={homeConfig.assets.testbar}
+          style={styles.backgroundVideos}
+          resizeMode="cover"
+          shouldPlay
+          isLooping
+          isMuted
         />
-
-      {/* Titre principal */}
-      <Text style={styles.title}>Countdown today - festival</Text>
-
-      {/* Boutons */}
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Link to ticketing</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Line-up</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>After-movie previous years</Text>
-      </TouchableOpacity>
-
-      {/* Barre de navigation en bas */}
-
-    </View>
+      </View>
+      {/* Add other components/content here if needed */}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    paddingTop: 40,
+  scrollContainer: {
+    flexGrow: 1,
   },
-  image: {
-    width: '90%',
-    height: 200,
-    resizeMode: 'cover',
-    borderRadius: 10,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginVertical: 20,
-    textAlign: 'center',
-  },
-  button: {
-    width: '80%',
-    padding: 15,
-    backgroundColor: '#3498db',
-    borderRadius: 10,
-    marginVertical: 10,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+  imageContainer: {
     width: '100%',
+    overflow: 'hidden',
+  },
+  backgroundVideo: {
     position: 'absolute',
-    bottom: 20,
-    backgroundColor: '#000',
-    paddingVertical: 10,
-  },
-  footerButton: {
-    alignItems: 'center',
-  },
-  footerIcon: {
-    fontSize: 20,
-    color: '#fff',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
   },
 });
