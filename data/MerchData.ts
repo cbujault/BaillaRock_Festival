@@ -1,4 +1,4 @@
-import { MerchProducts } from '../app/(tabs)/Merch';
+import { MerchProducts } from '../app/Merch';
 
 export const  Products: MerchProducts[] = [
     { id: '1', name: 'T-shirt', price: '20€', size: 'XXS-XXL' },

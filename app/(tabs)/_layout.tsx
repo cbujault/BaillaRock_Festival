@@ -5,12 +5,14 @@ import { Platform, TouchableOpacity, Image, StyleSheet, View } from 'react-nativ
 import { HapticTab } from '@/components/HapticTab';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
+import { FontAwesome } from 'react-native-vector-icons';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  
+
   return (
     <Tabs
       screenOptions={{
@@ -19,48 +21,41 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-            height: 80,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: '#fff',
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-          },
-          android: {
-            position: 'absolute',
-            height: 80,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            backgroundColor: '#fff',
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-          },
-        }),
+        tabBarStyle: {
+          position: 'absolute',
+          height: 80,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: '#fff',
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+        },
       }}
     >
-      {/* Autres écrans */}
+      {/* L'importation et la déclaration du composant Village se fait automatiquement grâce à la structure des répertoires */}
       <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
+      name="Programmation"
+      options={{
+        title: 'Programme',
+        tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="playlist-music" size={size} color={color} /> // Icône de note de musique avec FontAwesome
+        ),
+      }}
+    />
 
+
+      {/* Supprimer la prop `component` ici */}
       <Tabs.Screen
-        name="village"
+        name="Village" // Utilise le chemin automatique
         options={{
           title: 'Village',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="village" color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="home" size={size} color={color} /> // Icône FontAwesome
+          ),
         }}
       />
 
-      {/* Bouton Home parfaitement centré */}
       <Tabs.Screen
         name="index"
         options={{
@@ -79,20 +74,28 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="Merch"
+        name="Boisson" // Utilise le chemin automatique
         options={{
-          title: 'Merch',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="merch" color={color} />,
+          title: 'Bar',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="beer" size={size} color={color} /> // Icône FontAwesome pour un verre de cocktail
+          ),
         }}
       />
 
-    <Tabs.Screen
-        name="MenuBurger"
+
+
+        <Tabs.Screen
+        name="MenuBurger" // Utilise le chemin automatique
         options={{
-          title: 'Burger',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="hamburger" color={color} />,
+          title: 'Menu',
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="menu" size={size} color={color} /> // Icône FontAwesome
+          ),
         }}
       />
+
+    
     </Tabs>
   );
 }
@@ -100,14 +103,14 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   centerContainer: {
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 25 : 20, // Ajuste la position verticale pour iOS et Android
-    alignSelf: 'center', // Centrage horizontal automatique
-    zIndex: 2, // Assure que le bouton est au-dessus de la barre d'onglets
+    bottom: Platform.OS === 'ios' ? 25 : 20,
+    alignSelf: 'center',
+    zIndex: 2,
   },
   homeButton: {
     width: 70,
     height: 70,
-    borderRadius: 35, // Bouton rond
+    borderRadius: 35,
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
-    elevation: 5, // Pour Android
+    elevation: 5,
   },
   homeIcon: {
     width: '100%',

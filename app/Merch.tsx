@@ -1,4 +1,4 @@
-import { Products } from '../../data/MerchData';
+import { Products } from '../data/MerchData';
 import React from 'react';
 import { StyleSheet, View, Text, FlatList, Dimensions } from 'react-native';
 

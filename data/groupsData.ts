@@ -1,4 +1,4 @@
-import { Group } from '../app/(tabs)/explore';
+import { Group } from '../app/(tabs)/Programmation';
 
 export const dayOneGroups: Group[] = [
   { id: '1', name: 'Group A', genre: 'Rock', startTime: '18:00', endTime: '19:30', image: 'https://via.placeholder.com/80', description: 'description du groupe' },

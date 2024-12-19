@@ -1,22 +1,13 @@
-import { useState, useEffect } from 'react';
-import { StyleSheet, Platform, View, Text, ScrollView, Dimensions, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Platform, View, Text, ScrollView, Dimensions, TouchableOpacity, Image, Linking } from 'react-native';
 import { Video } from 'expo-av'; // Importez Video de expo-av
-import { Linking } from 'react-native'; // Importez Linking pour la redirection vers une URL
-import { Appearance } from 'react-native';
 import { useRouter } from 'expo-router';
-import { homeConfig } from '@/config/Config_HomePage';
-
+import { homeConfig } from '@/config/Config_HomePage'; // Configuration des assets et autres
+import { FontAwesome, Ionicons, MaterialIcons } from 'react-native-vector-icons'; // Import des icônes
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
 export default function HomeScreen() {
-  Appearance.setColorScheme('dark');
-  // Date du festival (23 mai 2025)
-  const festivalDate = new Date('2025-05-23T18:00:00');
-  const router = useRouter(); // Hook pour la navigation
-
-
-  // État du compte à rebours
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -26,6 +17,9 @@ export default function HomeScreen() {
   const [timeExpired, setTimeExpired] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  const festivalDate = new Date('2025-05-23T18:00:00');
+  const router = useRouter(); // Hook pour la navigation
+
   // Mise à jour du compte à rebours
   useEffect(() => {
     const updateCountdown = () => {
@@ -33,23 +27,20 @@ export default function HomeScreen() {
       const timeDifference = festivalDate.getTime() - now.getTime();
   
       if (timeDifference <= 0) {
-        setTimeExpired(true); // Cela met à jour `timeExpired`
+        setTimeExpired(true);
       } else {
         const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
         const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
   
-        setTimeLeft({ days, hours, minutes, seconds }); // Cela met à jour `timeLeft`
+        setTimeLeft({ days, hours, minutes, seconds });
       }
     };
   
     const interval = setInterval(updateCountdown, 1000);
-  
-    // Nettoyage de l'intervalle
     return () => clearInterval(interval);
-  }, [festivalDate]); // Ajoutez seulement `festivalDate` comme dépendance si nécessaire
-  
+  }, [festivalDate]);
 
   // Récupérer la hauteur de l'écran
   const screenHeight = Dimensions.get('window').height;
@@ -58,16 +49,14 @@ export default function HomeScreen() {
   const handleScroll = (event: any) => {
     const contentOffsetY = event.nativeEvent.contentOffset.y;
     const threshold = 500;
-    const thresholdReturn = 0;
-
     if (contentOffsetY > threshold && !isScrolled) {
       setIsScrolled(true);
-    } else if (contentOffsetY < thresholdReturn && isScrolled) {
+    } else if (contentOffsetY < threshold && isScrolled) {
       setIsScrolled(false);
     }
   };
 
-  // Redirection vers une URL ou une page
+  // Fonction pour la redirection vers la page d'exploration
   const navigateToExplore = () => {
     router.push('/(tabs)/explore');
   };
@@ -75,29 +64,27 @@ export default function HomeScreen() {
   // Rendu principal
   return (
     <ScrollView
-    contentContainerStyle={styles.scrollContainer}
-    onScroll={handleScroll}
-    scrollEventThrottle={16}
-  >
-    <View style={[styles.imageContainer, { height: screenHeight }]}>
-      {/* Affichage conditionnel avec les assets de la configuration */}
-      {isScrolled ? (
-        <Image
-          source={homeConfig.assets.image} // Image depuis Config_HomePage
-          style={styles.backgroundImage}
-          resizeMode="cover"
-        />
-      ) : (
-        <Video
-          source={homeConfig.assets.video} // Vidéo depuis Config_HomePage
-          style={styles.backgroundVideo}
-          resizeMode="cover"
-          shouldPlay
-          isLooping
-          isMuted
-        />
-      )}
-
+      contentContainerStyle={styles.scrollContainer}
+      onScroll={handleScroll}
+      scrollEventThrottle={16}
+    >
+      <View style={[styles.imageContainer, { height: screenHeight }]}>
+        {isScrolled ? (
+          <Image
+            source={homeConfig.assets.image}
+            style={styles.backgroundImage}
+            resizeMode="cover"
+          />
+        ) : (
+          <Video
+            source={homeConfig.assets.video}
+            style={styles.backgroundVideo}
+            resizeMode="cover"
+            shouldPlay
+            isLooping
+            isMuted
+          />
+        )}
         <View style={styles.overlay}>
           <Text style={styles.TitleText}>{homeConfig.festivalName}</Text>
           {timeExpired ? (
@@ -144,28 +131,37 @@ export default function HomeScreen() {
 
       <ThemedView style={styles.stepContainer}>
         <View style={styles.titleContainer}>
-          <ThemedText style={styles.subtitle}>{homeConfig.messages.socialMediaTitle}</ThemedText>
+          <ThemedText style={styles.subtitle}>Suivez-nous sur les réseaux sociaux</ThemedText>
         </View>
         <View style={styles.socialMediaIcons}>
-          {Object.keys(homeConfig.socialMediaLinks).map((key) => (
-            <TouchableOpacity
-              key={key}
-              onPress={() => Linking.openURL(homeConfig.socialMediaLinks[key as keyof typeof homeConfig.socialMediaLinks])}
-            >
-              <Image
-                source={homeConfig.assets.socialIcons[key as keyof typeof homeConfig.assets.socialIcons]}
-                style={styles.socialMediaIcon}
-              />
-            </TouchableOpacity>
-          ))}
+          {Object.keys(homeConfig.socialMediaLinks).map((key) => {
+            const iconData = homeConfig.assets.socialIcons[key];
+            if (!iconData) return null;
+
+            const IconComponent =
+              iconData.iconType === 'FontAwesome' ? FontAwesome :
+              iconData.iconType === 'Ionicons' ? Ionicons :
+              iconData.iconType === 'MaterialIcons' ? MaterialIcons :
+              null;
+
+            if (!IconComponent) return null;
+
+            return (
+              <TouchableOpacity
+                key={key}
+                onPress={() => Linking.openURL(homeConfig.socialMediaLinks[key])}
+              >
+                <IconComponent
+                  name={iconData.icon}
+                  size={30}
+                  color={iconData.color}
+                  style={styles.socialMediaIcon}
+                />
+              </TouchableOpacity>
+            );
+          })}
         </View>
-
-
-        {/* Titre de la section */}
-      <ThemedText type="title" style={styles.title}>
-      </ThemedText>
-
-      {/* Contenu descriptif */}
+        {/* Contenu descriptif */}
       <ThemedText style={styles.text}>
       </ThemedText>
 
@@ -174,7 +170,13 @@ export default function HomeScreen() {
       </ThemedText>
       <ThemedText style={styles.text}>
       </ThemedText>
+      {/* Contenu descriptif */}
+      <ThemedText style={styles.text}>
+      </ThemedText>
 
+      {/* Informations complémentaires */}
+      <ThemedText style={styles.text}>
+      </ThemedText>
       <ThemedText style={styles.text}>
       </ThemedText>
 
@@ -318,7 +320,7 @@ const styles = StyleSheet.create({
     marginBottom: 10, // Espacement en bas du titre
     textShadowColor: 'rgba(0, 0, 0, 0.3)', // Ajout d'une ombre
     textShadowOffset: { width: 1, height: 1 }, // Décalage de l'ombre
-    textShadowRadius: 2, // Flou de l'ombre
+    textShadowRadius: 4, // Flou de l'ombre
     fontFamily: 'Arial', // Police personnalisée (remplacez par votre choix si nécessaire)
   },
   

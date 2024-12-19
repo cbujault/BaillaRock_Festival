@@ -2,10 +2,6 @@
 import video from '@/assets/videos/videohomepage.mp4';
 import image from '@/assets/images/Dragon.png';
 import siteMap from '@/assets/images/Plan_baillarock.png';
-import instagramIcon from '@/assets/images/Icon_reseau/instagram.png';
-import facebookIcon from '@/assets/images/Icon_reseau/facebook.png';
-import youtubeIcon from '@/assets/images/Icon_reseau/youtube.png';
-import websiteIcon from '@/assets/images/Icon_reseau/web-link.png';
 
 // Configuration de la page d'accueil
 export const homeConfig = {
@@ -14,19 +10,35 @@ export const homeConfig = {
   location: "Saint Georges Les Baillargeaux",
   socialMediaLinks: {
     instagram: "https://www.instagram.com/baillarock_unitedwefest/",
-    facebook: "https://www.facebook.com/",
-    youtube: "https://www.youtube.com/",
+    facebook: "https://www.facebook.com/UnitedWeFest/",
+    youtube: "https://www.youtube.com/channel/UCUzh0r_ru-REV_5OFLzamAw",
     website: "https://www.baillarockfestival.fr/"
   },
   assets: {
-    video, // Fichier vidéo
-    image, // Image de fond
+    video, // Fichier vidéo de la page d'accueil
+    image, // Image de fond lorsque l'on fait glisser vers le bas pour cacher la vidéo
     siteMap, // Plan du site
     socialIcons: {
-      instagram: instagramIcon, // Icône Instagram
-      facebook: facebookIcon,   // Icône Facebook
-      youtube: youtubeIcon,     // Icône YouTube
-      website: websiteIcon,     // Icône du site web
+      instagram: { 
+        icon: "instagram", 
+        iconType: "FontAwesome", 
+        color: 'rgba(132, 132, 132, 0.7)'
+      }, 
+      facebook: { 
+        icon: "facebook", 
+        iconType: "FontAwesome", 
+        color: 'rgba(132, 132, 132, 0.7)' 
+      },    
+      youtube: { 
+        icon: "youtube", 
+        iconType: "FontAwesome", 
+        color: 'rgba(132, 132, 132, 0.7)' 
+      },       
+      website: { 
+        icon: "web", 
+        iconType: "MaterialIcons", 
+        color: 'rgba(132, 132, 132, 0.7)' 
+      },       
     }
   },
   messages: {
