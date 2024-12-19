@@ -44,17 +44,16 @@ export default function TabLayout() {
       }}
     />
 
-
-      {/* Supprimer la prop `component` ici */}
       <Tabs.Screen
-        name="Village" // Utilise le chemin automatique
+        name="Boisson" // Utilise le chemin automatique
         options={{
-          title: 'Village',
+          title: 'Bar',
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="home" size={size} color={color} /> // Icône FontAwesome
+            <Ionicons name="beer" size={size} color={color} /> // Icône FontAwesome pour un verre de cocktail
           ),
         }}
       />
+
 
       <Tabs.Screen
         name="index"
@@ -73,17 +72,16 @@ export default function TabLayout() {
         }}
       />
 
+      {/* Supprimer la prop `component` ici */}
       <Tabs.Screen
-        name="Boisson" // Utilise le chemin automatique
+        name="Village" // Utilise le chemin automatique
         options={{
-          title: 'Bar',
+          title: 'Village',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="beer" size={size} color={color} /> // Icône FontAwesome pour un verre de cocktail
+            <FontAwesome name="home" size={size} color={color} /> // Icône FontAwesome
           ),
         }}
       />
-
-
 
         <Tabs.Screen
         name="MenuBurger" // Utilise le chemin automatique
