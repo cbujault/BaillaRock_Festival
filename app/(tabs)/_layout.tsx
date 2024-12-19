@@ -10,8 +10,6 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
-
   
   return (
     <Tabs
@@ -55,10 +53,10 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="Village"
+        name="village"
         options={{
           title: 'Village',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="home" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="village" color={color} />,
         }}
       />
 
@@ -80,6 +78,13 @@ export default function TabLayout() {
         }}
       />
 
+      <Tabs.Screen
+        name="Merch"
+        options={{
+          title: 'Merch',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="merch" color={color} />,
+        }}
+      />
 
     <Tabs.Screen
         name="MenuBurger"
