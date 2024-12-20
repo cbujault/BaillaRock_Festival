@@ -1,104 +1,118 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform, TouchableOpacity, Image, StyleSheet, View } from 'react-native';
+import {
+  Platform,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  View,
+  StatusBar,
+  SafeAreaView,
+} from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { FontAwesome } from 'react-native-vector-icons';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: 'green',
-        tabBarInactiveTintColor: 'gray',
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: {
-          position: 'absolute',
-          height: 80,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: '#fff',
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-        },
-      }}
-    >
-      {/* L'importation et la déclaration du composant Village se fait automatiquement grâce à la structure des répertoires */}
-      <Tabs.Screen
-      name="Programmation"
-      options={{
-        title: 'Programme',
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="playlist-music" size={size} color={color} /> // Icône de note de musique avec FontAwesome
-        ),
-      }}
-    />
-
-      <Tabs.Screen
-        name="Boisson" // Utilise le chemin automatique
-        options={{
-          title: 'Bar',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="beer" size={size} color={color} /> // Icône FontAwesome pour un verre de cocktail
-          ),
-        }}
+    <SafeAreaView style={styles.container}>
+      {/* Barre d'état non translucide avec un arrière-plan */}
+      <StatusBar
+        translucent={false}
+        backgroundColor={colorScheme === 'dark' ? '#000' : '#fff'}
+        barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
       />
-
-
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarButton: ({ onPress }) => (
-            <View style={styles.centerContainer}>
-              <TouchableOpacity style={styles.homeButton} onPress={onPress}>
-                <Image
-                  source={require('@/assets/images/Museau.png')}
-                  style={styles.homeIcon}
-                />
-              </TouchableOpacity>
-            </View>
-          ),
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: 'green',
+          tabBarInactiveTintColor: 'gray',
+          headerShown: false,
+          tabBarButton: HapticTab,
+          tabBarBackground: TabBarBackground,
+          tabBarStyle: {
+            position: 'relative',  // Changer de 'absolute' à 'relative'
+            height: 80,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: '#fff',
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          },
         }}
-      />
-
-      {/* Supprimer la prop `component` ici */}
-      <Tabs.Screen
-        name="Village" // Utilise le chemin automatique
-        options={{
-          title: 'Village',
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="home" size={size} color={color} /> // Icône FontAwesome
-          ),
-        }}
-      />
+      >
+        <Tabs.Screen
+          name="Programmation"
+          options={{
+            title: 'Programme',
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="playlist-music" size={size} color={color} />
+            ),
+          }}
+        />
 
         <Tabs.Screen
-        name="MenuBurger" // Utilise le chemin automatique
-        options={{
-          title: 'Menu',
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="menu" size={size} color={color} /> // Icône FontAwesome
-          ),
-        }}
-      />
+          name="Boisson"
+          options={{
+            title: 'Bar',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="beer" size={size} color={color} />
+            ),
+          }}
+        />
 
-    
-    </Tabs>
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Home',
+            tabBarButton: ({ onPress }) => (
+              <View style={styles.centerContainer}>
+                <TouchableOpacity style={styles.homeButton} onPress={onPress}>
+                  <Image
+                    source={require('@/assets/images/Museau.png')}
+                    style={styles.homeIcon}
+                  />
+                </TouchableOpacity>
+              </View>
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="Village"
+          options={{
+            title: 'Village',
+            tabBarIcon: ({ color, size }) => (
+              <FontAwesome name="home" size={size} color={color} />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="MenuBurger"
+          options={{
+            title: 'Menu',
+            tabBarIcon: ({ color, size }) => (
+              <Feather name="menu" size={size} color={color} />
+            ),
+          }}
+        />
+      </Tabs>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff', // Assure un fond blanc derrière le contenu
+  },
   centerContainer: {
     position: 'absolute',
     bottom: Platform.OS === 'ios' ? 25 : 20,
