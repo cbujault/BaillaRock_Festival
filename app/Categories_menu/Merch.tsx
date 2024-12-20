@@ -1,7 +1,7 @@
 import { Products } from '../../data/MerchData';
 import React from 'react';
 import { StyleSheet, View, Text, FlatList, Dimensions } from 'react-native';
-
+import {Image} from 'react-native'; 
 const { width, height } = Dimensions.get('window');
 
 // Définir un produit
@@ -10,12 +10,14 @@ export type MerchProducts = {
   name: string; // Nom du produit
   price: string; // Prix du produit
   size: string; // Taille ou dimension du produit
+  image: number; //image
 };
 
 export default function Merch() {
   // Fonction pour rendre un produit dans la liste
   const renderProduct = ({ item }: { item: MerchProducts }) => (
     <View style={styles.productContainer}>
+      <Image style={styles.productImage} source={item.image}/>
       <Text style={styles.productName}>{item.name}</Text> {/* Afficher le nom du produit */}
       <Text style={styles.productPrice}>{item.price}</Text> {/* Afficher le prix du produit */}
       <Text style={styles.productSize}>Taille: {item.size}</Text> {/* Afficher la taille du produit */}
@@ -71,4 +73,9 @@ const styles = StyleSheet.create({
     fontSize: 14, // Taille de police pour la taille
     color: '#aaa', // Couleur grise pour le texte
   },
+  productImage: {
+    width:100, //largeur image 
+    height :100, //hauteur image 
+    marginBottom: 8, //espacement en dessous de image
+  }
 });
