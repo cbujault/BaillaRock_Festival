@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "398022023848",
+    "project_id": "baillarock-festival",
+    "storage_bucket": "baillarock-festival.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:398022023848:android:67e4d29ab9ebb4a6dbc09d",
+        "android_client_info": {
+          "package_name": "com.company.baillarockfestival"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4m54rOHSX-sGvKsp4-xUlFWeXV1PhE2Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

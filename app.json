@@ -9,13 +9,16 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.company.baillarockfestival", 
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/lea.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.company.baillarockfestival",  
+      "versionCode": 1
     },
     "web": {
       "bundler": "metro",

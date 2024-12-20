@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     color: '#ddd', // Couleur douce pour les labels
   },
   button: {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Couleur du bouton
+    backgroundColor: 'rgba(31, 84, 5, 0.7)', // Couleur du bouton
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 25,
