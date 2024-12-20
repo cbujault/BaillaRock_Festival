@@ -1,7 +1,6 @@
 // Import des fichiers multimédias statiques
 import video from '@/assets/videos/videohomepage.mp4';
 import image from '@/assets/images/Dragon.png';
-import imageBar from '@/assets/images/testbar.png';
 import siteMap from '@/assets/images/Plan_baillarock.png';
 
 // Configuration de la page d'accueil
@@ -16,7 +15,6 @@ export const homeConfig = {
     website: "https://www.baillarockfestival.fr/"
   },
   assets: {
-    testbar,
     video, // Fichier vidéo de la page d'accueil
     image, // Image de fond lorsque l'on fait glisser vers le bas pour cacher la vidéo
     siteMap, // Plan du site

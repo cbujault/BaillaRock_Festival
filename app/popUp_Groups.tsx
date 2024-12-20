@@ -48,7 +48,7 @@ export default function GroupModal({ visible, onClose, group }: GroupModalProps)
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'rgb(40, 40, 40)',
   },
   banner: {
     height: '25%',
