@@ -1,10 +1,10 @@
 import { Group } from '../app/(tabs)/Programmation';
 
 export const dayOneGroups: Group[] = [
-  { id: '1', name: 'Group A', genre: 'Rock', startTime: '18:00', endTime: '19:30', image: require('../assets/images/Merch/teeshirt.png'), description: 'description du groupe' },
-  { id: '2', name: 'Group B', genre: 'Jazz', startTime: '19:45', endTime: '21:15', image: require('../assets/images/Merch/teeshirt.png'), description: 'description du groupe' },
-  { id: '3', name: 'Group C', genre: 'Pop', startTime: '21:30', endTime: '23:00', image: require('../assets/images/Merch/teeshirt.png'), description: 'description du groupe' },
-  { id: '4', name: 'Group Z', genre: 'Pop', startTime: '21:30', endTime: '23:00', image: require('../assets/images/Merch/teeshirt.png'), description: 'description du groupe' }
+  { id: '1', name: 'Group A', genre: 'Rock', startTime: '18:00', endTime: '19:30', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+  { id: '2', name: 'Group B', genre: 'Jazz', startTime: '19:45', endTime: '21:15', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+  { id: '3', name: 'Group C', genre: 'Pop', startTime: '21:30', endTime: '23:00', image: 'https://via.placeholder.com/80', description: 'description du groupe' },
+  { id: '4', name: 'Group Z', genre: 'Pop', startTime: '21:30', endTime: '23:00', image: 'https://via.placeholder.com/80', description: 'description du groupe' }
 ];
 
 
