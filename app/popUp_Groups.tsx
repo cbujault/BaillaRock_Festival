@@ -1,9 +1,15 @@
-import React from 'react';
+import * as React from 'react';
 import { Modal, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // Pour les icônes des réseaux sociaux
-import {Group} from './explore';
 
-type GroupModalProps = {
+type Group = {
+  name: string;
+  genre: string;
+  image: string;
+  description: string;
+};
+
+export type GroupModalProps = {
   visible: boolean;
   onClose: () => void;
   group: Group | null;
