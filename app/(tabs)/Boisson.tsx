@@ -34,6 +34,14 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     width: '100%',
-    height: 2000,  // Une hauteur arbitraire pour rendre l'image plus grande que l'écran
+    height: 3000,  // Une hauteur arbitraire pour rendre l'image plus grande que l'écran
+  },
+  contentContainer: {
+    padding: 16,
+  },
+  text: {
+    fontSize: 18,
+    color: '#000',
+    textAlign: 'center',
   },
 });
