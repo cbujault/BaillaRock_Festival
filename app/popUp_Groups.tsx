@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Modal, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // Pour les icônes des réseaux sociaux
+import { ImageSourcePropType } from 'react-native';
 
 type Group = {
   name: string;
   genre: string;
-  image: string;
+  image: ImageSourcePropType;
   description: string;
 };
 
@@ -27,7 +28,7 @@ export default function GroupModal({ visible, onClose, group }: GroupModalProps)
             <Text style={styles.groupName}>{group.name}</Text>
             <Text style={styles.groupGenre}>{group.genre}</Text>
           </View>
-          <Image source={{ uri: group.image }} style={styles.groupImage} />
+          <Image source={group.image} style={styles.groupImage} />
         </View>
         <View style={styles.content}>
           <Text style={styles.description}>{group.description}</Text>

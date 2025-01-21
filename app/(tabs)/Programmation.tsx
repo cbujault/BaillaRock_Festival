@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity, Dimensions, SafeAreaView } from 'react-native';
+import { ImageSourcePropType } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import GroupModal from '../popUp_Groups';
 import { dayOneGroups, dayTwoGroups } from '../../data/groupsData';
@@ -13,7 +14,7 @@ export type Group = {
   genre: string;
   startTime: string;
   endTime: string;
-  image: string;
+  image: ImageSourcePropType;
   description: string;
 };
 
@@ -67,6 +68,12 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (isToday && currentIndex >= 0 && flatListRef.current) {
+      flatListRef.current.scrollToIndex({ index: currentIndex, animated: true });
+    }
+  }, [currentIndex, isToday]);  
+
   // Calculer la progression en pourcentage (curseur latéral)
   const calculateProgressHeight = () => {
     const totalDuration = groups.reduce(
@@ -117,7 +124,7 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
 
   const renderGroup = ({ item }: { item: Group }) => (
     <TouchableOpacity style={[styles.groupContainer]} onPress={() => openModal(item)}>
-      <Image source={{ uri: item.image }} style={styles.groupImage} />
+      <Image source={item.image} style={styles.groupImage} />
       <View style={styles.groupDetails}>
         <Text style={styles.groupName}>{item.name}</Text>
         <Text style={styles.groupGenre}>{item.genre}</Text>
@@ -130,7 +137,7 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
     
 
   return (
-    <View style={styles.screenContainer}>
+    <SafeAreaView style={styles.screenContainer}>
       {/* Curseur d'avancée */}
       <View style={styles.progressContainer}>
         {isToday && (
@@ -166,7 +173,7 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
         contentContainerStyle={styles.listContent}
       />
       <GroupModal visible={isModalVisible} onClose={closeModal} group={selectedGroup} />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -178,16 +185,16 @@ export default function ConcertTabs() {
     <Tab.Navigator
       screenOptions={{
         swipeEnabled: true,
-        tabBarLabelStyle: { fontSize: 20, fontWeight: 'bold', textTransform: 'none', color: '#000' },
-        tabBarStyle: { height: 60, backgroundColor: '#fff', elevation: 5, shadowColor: '#000', shadowOpacity: 0.2,shadowRadius: 4 },
+        tabBarLabelStyle: { fontSize: 20, fontWeight: 'bold', textTransform: 'none', color: '#000', textAlign: 'center', width: '100%' },
+        tabBarStyle: { height: 80, backgroundColor: '#fff', elevation: 5, shadowColor: '#000', shadowOpacity: 0.2,shadowRadius: 4, justifyContent: 'center' },
         tabBarIndicatorStyle: { backgroundColor: '#289009', height: 4, borderRadius: 2 },
         tabBarPressColor: '#c4f1c4',
       }}
     >
-      <Tab.Screen name="23 Mai">
+      <Tab.Screen name="Ven. 23 Mai">
         {() => <DayScreen groups={dayOneGroups} festivalDate="2025-05-23" />}
       </Tab.Screen>
-      <Tab.Screen name="24 Mai">
+      <Tab.Screen name="Sam. 24 Mai">
         {() => <DayScreen groups={dayTwoGroups} festivalDate="2025-05-24" />}
       </Tab.Screen>
     </Tab.Navigator>
@@ -239,7 +246,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0e0e0',
   },
   currentGroup: {
-    backgroundColor: '#ffeb3b',
+    backgroundColor: '#62ff3b',
   },
   futureGroup: {
     opacity: 0.8,
