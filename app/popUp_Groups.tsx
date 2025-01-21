@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     marginBottom: 20,
+    color: 'white',
   },
   socialIcons: {
     flexDirection: 'row',
