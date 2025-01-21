@@ -7,7 +7,7 @@ export const dayOneGroups: Group[] = [
     genre: 'Metal / Hardcore', 
     startTime: '18:00', 
     endTime: '18:45', 
-    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    image: require('../assets/images/Image_prog/kibosh.jpg'), 
     description: 'Un groupe de Metal/Hardcore en provenance de Bordeaux, prêt à enflammer la scène !' 
   },
   { 
@@ -16,7 +16,7 @@ export const dayOneGroups: Group[] = [
     genre: 'Hardcore', 
     startTime: '19:00', 
     endTime: '19:45', 
-    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    image: require('../assets/images/Image_prog/whoiam.jpg'), 
     description: 'Hardcore intense venu tout droit d’Angoulême.' 
   },
   { 
@@ -25,7 +25,7 @@ export const dayOneGroups: Group[] = [
     genre: 'Death Metal', 
     startTime: '20:00', 
     endTime: '20:45', 
-    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    image: require('../assets/images/Image_prog/akiavel.jpg'), 
     description: 'Death Metal puissant originaire de la région PACA.' 
   },
   { 
@@ -34,7 +34,7 @@ export const dayOneGroups: Group[] = [
     genre: 'Punk/Hardcore Fusion', 
     startTime: '21:00', 
     endTime: '21:45', 
-    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    image: require('../assets/images/Image_prog/slope.jpg'), 
     description: 'Un mélange explosif de Punk et Hardcore tout droit venu d’Allemagne.' 
   },
   { 
@@ -43,7 +43,7 @@ export const dayOneGroups: Group[] = [
     genre: 'Skate Punk', 
     startTime: '22:00', 
     endTime: '23:00', 
-    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    image: require('../assets/images/Image_prog/satanicsurfers.jpg'), 
     description: 'Légendes du Skate Punk suédois, prêts à clore cette soirée avec énergie !' 
   }
 ];
@@ -55,7 +55,7 @@ export const dayTwoGroups: Group[] = [
     genre: 'Heavy Pop-punk', 
     startTime: '16:00', 
     endTime: '16:45', 
-    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    image: require('../assets/images/Image_prog/mirabelle.jpg'), 
     description: 'Du Heavy Pop-punk énergique venu de Paris pour démarrer la journée !' 
   },
   { 
@@ -64,7 +64,7 @@ export const dayTwoGroups: Group[] = [
     genre: 'Punk-rock', 
     startTime: '17:00', 
     endTime: '17:45', 
-    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    image: require('../assets/images/Image_prog/CF98.jpg'), 
     description: 'Un groupe de Punk-rock dynamique venu de Pologne.' 
   },
   { 
@@ -73,7 +73,7 @@ export const dayTwoGroups: Group[] = [
     genre: 'Crossover - Thrash/Metal/Hardcore', 
     startTime: '18:00', 
     endTime: '18:45', 
-    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    image: require('../assets/images/Image_prog/eightsins.jpg'), 
     description: 'Crossover explosif de Thrash, Metal et Hardcore, tout droit de Grenoble.' 
   },
   { 
@@ -82,7 +82,7 @@ export const dayTwoGroups: Group[] = [
     genre: 'Slipknot cover band', 
     startTime: '19:00', 
     endTime: '19:45', 
-    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    image: require('../assets/images/Image_prog/earlymaggots.jpg'), 
     description: 'Un hommage fidèle à Slipknot, par un groupe talentueux de Lyon.' 
   },
   { 
@@ -91,7 +91,7 @@ export const dayTwoGroups: Group[] = [
     genre: 'Hardcore', 
     startTime: '20:00', 
     endTime: '20:45', 
-    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    image: require('../assets/images/Image_prog/noturningback.jpg'), 
     description: 'Hardcore puissant et sans concession venu des Pays-Bas.' 
   },
   { 
@@ -100,7 +100,7 @@ export const dayTwoGroups: Group[] = [
     genre: 'Metalcore', 
     startTime: '21:00', 
     endTime: '22:00', 
-    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    image: require('../assets/images/Image_prog/novelists.jpg'), 
     description: 'Metalcore moderne et mélodique, en provenance de Paris.' 
   }
 ];
