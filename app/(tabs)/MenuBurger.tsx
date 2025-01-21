@@ -1,7 +1,8 @@
 // app/Menu.tsx
 import React from 'react';
-import { Button, View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
+import { FontAwesome } from '@expo/vector-icons'; // Pour les icônes
 
 export default function Menu() {
   const router = useRouter();
@@ -17,11 +18,20 @@ export default function Menu() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Menu Content</Text>
-      <Button title="Go to Merch" onPress={handleNavigateToMerch} />
-      <Button title="Go to Partenaires" onPress={handleNavigateToPartenaires} />
-    </View>
+    <ImageBackground source={require('../../assets/images/lea.png')} style={styles.container}>
+      <Text style={styles.title}>Menu</Text>
+
+      {/* Boutons personnalisés avec des icônes */}
+      <TouchableOpacity style={styles.button} onPress={handleNavigateToMerch}>
+        <FontAwesome name="shopping-cart" size={20} color="#fff" />
+        <Text style={styles.buttonText}>Go to Merch</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={handleNavigateToPartenaires}>
+        <FontAwesome name="users" size={20} color="#fff" />
+        <Text style={styles.buttonText}>Go to Partenaires</Text>
+      </TouchableOpacity>
+    </ImageBackground>
   );
 }
 
@@ -32,9 +42,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Couleur semi-transparente sur le fond
   },
   title: {
-    fontSize: 24,
-    marginBottom: 20,
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 30,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#4CAF50', // Couleur de fond du bouton
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginBottom: 15,
+    width: '80%', // Largeur du bouton
+    justifyContent: 'center', // Centrer le texte et l'icône
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4, // Ombre pour iOS et Android
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#fff',
+    marginLeft: 10, // Espacement entre l'icône et le texte
   },
 });

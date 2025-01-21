@@ -1,17 +1,17 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, FlatList, Dimensions, Image, TouchableOpacity } from 'react-native';
-import PartModal from '../popUp_Part'; 
+import PartModal from './popUp_Part'; 
 import { Partenaires } from '../../data/PartenaireData';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
-// Définir le type pour un partenaire
+// Type pour un partenaire
 export type ListPartners = {
   id: string; // Identifiant unique
   name: string; // Nom du partenaire
   genre: string; // Genre du partenaire
-  image: string; // URL de l'image du partenaire
   description: string; // Description du partenaire
+  image: number; // Représente une ressource d'image importée via require
 };
 
 export default function Partenaire() {
@@ -25,7 +25,7 @@ export default function Partenaire() {
 
   const renderPartner = ({ item }: { item: ListPartners }) => (
     <TouchableOpacity style={styles.partnerContainer} onPress={() => handlePartnerPress(item)}>
-      <Image style={styles.partnerImage} source={{ uri: item.image }} resizeMode="contain" />
+      <Image style={styles.partnerImage} source={item.image} resizeMode="contain" />
       <Text style={styles.partnerName}>{item.name || 'Nom inconnu'}</Text>
     </TouchableOpacity>
   );
@@ -47,7 +47,7 @@ export default function Partenaire() {
       <PartModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        part={selectedPart}
+        part={selectedPart} // Corrigé pour être compatible
       />
     </View>
   );
@@ -74,17 +74,20 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
     alignItems: 'center',
+    justifyContent: 'center', // Centrer l'image et le texte
   },
   partnerName: {
-    fontSize: 16,
+    fontSize: 14, // Légèrement réduit pour éviter les chevauchements
     fontWeight: 'bold',
     marginTop: 8,
     color: '#fff',
     textAlign: 'center',
   },
   partnerImage: {
-    width: width / 2 - 48,
-    height: width / 2 - 48,
+    width: width / 2 - 64, // Ajustement pour un espacement propre
+    height: width / 3 - 64, // Proportionnelle pour éviter des déformations
+    marginBottom: 8, // Espacement entre l'image et le texte
+    borderRadius: 10, // Coins arrondis pour un meilleur design
   },
   emptyText: {
     color: '#fff',
