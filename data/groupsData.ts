@@ -1,18 +1,106 @@
 import { Group } from '../app/(tabs)/Programmation';
 
-
 export const dayOneGroups: Group[] = [
-  { id: '1', name: 'Group A', genre: 'Rock', startTime: '18:00', endTime: '19:30', image: require('../assets/images/Image_prog/batterie.png'), description: 'description du groupe' },
-  { id: '2', name: 'Group B', genre: 'Jazz', startTime: '19:45', endTime: '21:15', image: require('../assets/images/Image_prog/dragon.png'), description: 'description du groupe' },
-  { id: '3', name: 'Group C', genre: 'Pop', startTime: '21:30', endTime: '23:00', image: require('../assets/images/Image_prog/batterie.png'), description: 'description du groupe' },
-  { id: '4', name: 'Group Z', genre: 'Pop', startTime: '21:30', endTime: '23:00', image: require('../assets/images/Image_prog/dragon.png'), description: 'description du groupe' }
+  { 
+    id: '1', 
+    name: 'Kibosh', 
+    genre: 'Metal / Hardcore', 
+    startTime: '18:00', 
+    endTime: '18:45', 
+    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    description: 'Un groupe de Metal/Hardcore en provenance de Bordeaux, prêt à enflammer la scène !' 
+  },
+  { 
+    id: '2', 
+    name: 'WHO I AM', 
+    genre: 'Hardcore', 
+    startTime: '19:00', 
+    endTime: '19:45', 
+    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    description: 'Hardcore intense venu tout droit d’Angoulême.' 
+  },
+  { 
+    id: '3', 
+    name: 'Akiavel', 
+    genre: 'Death Metal', 
+    startTime: '20:00', 
+    endTime: '20:45', 
+    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    description: 'Death Metal puissant originaire de la région PACA.' 
+  },
+  { 
+    id: '4', 
+    name: 'Slope', 
+    genre: 'Punk/Hardcore Fusion', 
+    startTime: '21:00', 
+    endTime: '21:45', 
+    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    description: 'Un mélange explosif de Punk et Hardcore tout droit venu d’Allemagne.' 
+  },
+  { 
+    id: '5', 
+    name: 'Satanic Surfers', 
+    genre: 'Skate Punk', 
+    startTime: '22:00', 
+    endTime: '23:00', 
+    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    description: 'Légendes du Skate Punk suédois, prêts à clore cette soirée avec énergie !' 
+  }
 ];
 
-
 export const dayTwoGroups: Group[] = [
-  { id: '4', name: 'Group D', genre: 'Metal', startTime: '16:00', endTime: '17:30', image: require('../assets/images/Image_prog/batterie.png'), description: 'description du groupe' },
-  { id: '5', name: 'Group E', genre: 'Blues', startTime: '17:45', endTime: '19:15', image: require('../assets/images/Image_prog/dragon.png'), description: 'description du groupe' },
-  { id: '6', name: 'Group F', genre: 'Electronic', startTime: '19:30', endTime: '21:00', image: require('../assets/images/Image_prog/batterie.png'), description: 'description du groupe' },
-  { id: '7', name: 'Group G', genre: 'pouet', startTime: '21:30', endTime: '00:00', image: require('../assets/images/Image_prog/dragon.png'), description: 'description du groupe' },
-
+  { 
+    id: '6', 
+    name: 'mirabelle.band', 
+    genre: 'Heavy Pop-punk', 
+    startTime: '16:00', 
+    endTime: '16:45', 
+    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    description: 'Du Heavy Pop-punk énergique venu de Paris pour démarrer la journée !' 
+  },
+  { 
+    id: '7', 
+    name: 'CF98', 
+    genre: 'Punk-rock', 
+    startTime: '17:00', 
+    endTime: '17:45', 
+    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    description: 'Un groupe de Punk-rock dynamique venu de Pologne.' 
+  },
+  { 
+    id: '8', 
+    name: 'EIGHT SINS', 
+    genre: 'Crossover - Thrash/Metal/Hardcore', 
+    startTime: '18:00', 
+    endTime: '18:45', 
+    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    description: 'Crossover explosif de Thrash, Metal et Hardcore, tout droit de Grenoble.' 
+  },
+  { 
+    id: '9', 
+    name: 'Early Maggots', 
+    genre: 'Slipknot cover band', 
+    startTime: '19:00', 
+    endTime: '19:45', 
+    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    description: 'Un hommage fidèle à Slipknot, par un groupe talentueux de Lyon.' 
+  },
+  { 
+    id: '10', 
+    name: 'No Turning Back', 
+    genre: 'Hardcore', 
+    startTime: '20:00', 
+    endTime: '20:45', 
+    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    description: 'Hardcore puissant et sans concession venu des Pays-Bas.' 
+  },
+  { 
+    id: '11', 
+    name: 'Novelists', 
+    genre: 'Metalcore', 
+    startTime: '21:00', 
+    endTime: '22:00', 
+    image: require('../assets/images/Image_prog/baillarock-affiche.jpg'), 
+    description: 'Metalcore moderne et mélodique, en provenance de Paris.' 
+  }
 ];
