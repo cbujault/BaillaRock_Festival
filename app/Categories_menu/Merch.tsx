@@ -82,7 +82,7 @@ const Merch: React.FC = () => {
         <View style={styles.modalContainer}>
           {/* Croissance de la croix rouge en bas de l'écran */}
           <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-            <FontAwesome name="times" size={30} color="red" />
+            <FontAwesome name="times" size={30} color='rgb(14, 93, 8)' />
           </TouchableOpacity>
 
           {selectedImage && (

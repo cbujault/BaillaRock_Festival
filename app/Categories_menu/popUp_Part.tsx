@@ -50,7 +50,7 @@ export default function PartModal({ visible, onClose, part }: PartModalProps) {
 
         {/* Icône de fermeture */}
         <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <FontAwesome name="times" size={30} color="red" />
+          <FontAwesome name="times" size={30} />
         </TouchableOpacity>
       </View>
     </Modal>
@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
+    color: 'rgba(31, 84, 5, 0.7)',
     top: 60, 
     right: 15, // Décalage depuis la droite
     zIndex: 40, // S'assurer que la croix soit au-dessus des autres éléments

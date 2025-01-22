@@ -13,7 +13,6 @@ import {
 import { HapticTab } from '@/components/HapticTab';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
-import { FontAwesome } from 'react-native-vector-icons';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -89,7 +88,7 @@ export default function TabLayout() {
           options={{
             title: 'Village',
             tabBarIcon: ({ color, size }) => (
-              <FontAwesome name="home" size={size} color={color} />
+              <Ionicons name="home" size={size} color={color} />
             ),
           }}
         />
