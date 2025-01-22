@@ -1,6 +1,5 @@
-// app/Menu.tsx
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons'; // Pour les icônes
 
@@ -18,38 +17,46 @@ export default function Menu() {
   };
 
   return (
-    <ImageBackground source={require('../../assets/images/lea.png')} style={styles.container}>
-      <Text style={styles.title}>Menu</Text>
+    <View style={styles.container}>
+      {/* Test d'affichage d'une image sans ImageBackground */}
+      <Image
+        source={require('../../assets/images/Affiche_fest_25.png')}
+        style={styles.backgroundImage}
+      />
 
       {/* Boutons personnalisés avec des icônes */}
       <TouchableOpacity style={styles.button} onPress={handleNavigateToMerch}>
         <FontAwesome name="shopping-cart" size={20} color="#fff" />
-        <Text style={styles.buttonText}>Go to Merch</Text>
+        <Text style={styles.buttonText}>Merchandising</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.button} onPress={handleNavigateToPartenaires}>
         <FontAwesome name="users" size={20} color="#fff" />
-        <Text style={styles.buttonText}>Go to Partenaires</Text>
+        <Text style={styles.buttonText}>Les partenaires</Text>
       </TouchableOpacity>
-    </ImageBackground>
+    </View>
   );
 }
 
-// StyleSheet pour améliorer l'apparence
+// StyleSheet
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flex: 1, // Cela permet au conteneur de prendre toute la taille de l'écran
+    justifyContent: 'center', // Centrer les éléments verticalement
+    alignItems: 'center', // Centrer les éléments horizontalement
     padding: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Couleur semi-transparente sur le fond
   },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 30,
+  backgroundImage: {
+    position: 'absolute', // Permet de placer l'image derrière tout le contenu
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: '210%', // S'assure que l'image occupe toute la largeur de l'écran
+    height: '160%', // S'assure que l'image occupe toute la hauteur de l'écran
+    zIndex: -1, // S'assure que l'image reste en arrière-plan
   },
+
   button: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -60,10 +67,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     width: '80%', // Largeur du bouton
     justifyContent: 'center', // Centrer le texte et l'icône
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4, // Ombre pour iOS et Android
   },
   buttonText: {
     fontSize: 18,
