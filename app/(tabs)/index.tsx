@@ -17,8 +17,19 @@ export default function HomeScreen() {
   const [timeExpired, setTimeExpired] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const festivalDate = new Date('2025-05-23T18:00:00');
+  const festivalDate = new Date(homeConfig.festivalDate);
   const router = useRouter(); // Hook pour la navigation
+
+
+  const openMaps = () => {
+    const address = encodeURIComponent(homeConfig.mapsLocalisation);
+    const url = Platform.select({
+      ios: `maps:0,0?q=${address}`, // Apple Maps
+      android: `geo:0,0?q=${address}` // Google Maps
+    });
+  
+    Linking.openURL(url).catch(err => console.error("Erreur d'ouverture des cartes", err));
+  };
 
   // Mise à jour du compte à rebours
   useEffect(() => {
@@ -109,7 +120,7 @@ export default function HomeScreen() {
               <Text style={styles.addressText}>{homeConfig.location}</Text>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => Linking.openURL(homeConfig.socialMediaLinks.instagram)}
+                onPress={() => Linking.openURL(homeConfig.socialMediaLinks.shop)}
               >
                 <Text style={styles.buttonText}>{homeConfig.messages.buyTickets}</Text>
               </TouchableOpacity>
@@ -127,6 +138,9 @@ export default function HomeScreen() {
           style={styles.planImage}
           resizeMode="contain"
         />
+        <TouchableOpacity onPress={openMaps} style={styles.buttonMaps}>
+          <Text style={styles.buttonTextMaps}>Y aller</Text>
+        </TouchableOpacity>
       </ThemedView>
 
       <ThemedView style={styles.stepContainer}>
@@ -269,6 +283,18 @@ const styles = StyleSheet.create({
     marginVertical: 10, // Espacement au-dessus et en dessous
     fontStyle: 'italic',
     textAlign: 'center', // Centrer le texte
+  },
+
+  buttonMaps: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: 'rgb(14, 93, 8)', // Bleu typique des liens
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  buttonTextMaps: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 
  expiredText: {
