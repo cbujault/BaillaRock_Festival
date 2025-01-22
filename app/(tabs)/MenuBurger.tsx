@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#4CAF50', // Couleur de fond du bouton
+    backgroundColor: '#388E3C', // Couleur de fond du bouton
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,

@@ -1,96 +1,163 @@
-import { Products } from '../../data/MerchData';
-import React from 'react';
-import { StyleSheet, View, Text, FlatList, Dimensions } from 'react-native';
-import {Image} from 'react-native'; 
-const { width} = Dimensions.get('window');
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  View,
+  ImageBackground,
+  Image,
+  Text,
+  Dimensions,
+  ScrollView,
+  Modal,
+  TouchableOpacity,
+  GestureResponderEvent,
+} from 'react-native';
 
-// Définir un produit
-export type MerchProducts = {
-  id: string; // Identifiant unique du produit
-  name: string; // Nom du produit
-  price: string; // Prix du produit
-  size: string; // Taille ou dimension du produit
-  image: number; //image
-};
+// Import des images
+const BackgroundImage = require('../../assets/images/Merch/Affiche_drag.png');
+const TopImage = require('../../assets/images/Merch/sweat.png'); // Image du sweat
+const LogoImage = require('../../assets/images/Merch/logo.png'); // Image du logo
+const TeeshirtImage = require('../../assets/images/Merch/teeshirt_fest.png'); // Image du teeshirt
+const PartImage = require('../../assets/images/Merch/part.png'); // Nouvelle image part
 
-export default function Merch() {
-  // Fonction pour rendre un produit dans la liste
-  const renderProduct = ({ item }: { item: MerchProducts }) => (
-    <View style={styles.productContainer}>
-      <Image style={styles.productImage} source={item.image} />
-      {/* Vérification pour éviter les valeurs nulles ou indéfinies */}
-      <Text style={styles.productName}>{item.name || 'Produit inconnu'}</Text>
-      <Text style={styles.productPrice}>{item.price || 'Prix non disponible'}</Text>
-      <Text style={styles.productSize}>
-        {item.size ? `Taille: ${item.size}` : 'Taille inconnue'}
-      </Text>
-    </View>
-  );
+const { width } = Dimensions.get('window');
+
+const Merch: React.FC = () => {
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+
+  const handleImagePress = (image: number) => {
+    setSelectedImage(image);
+    setModalVisible(true);
+  };
+
+  const closeModal = (event?: GestureResponderEvent) => {
+    setModalVisible(false);
+    setSelectedImage(null);
+  };
 
   return (
-    <View style={styles.screenContainer}>
-      {/* Liste des produits */}
-      <FlatList
-        data={Products} // Données des produits
-        keyExtractor={(item) => item.id} // Clé unique pour chaque produit
-        renderItem={renderProduct} // Fonction pour rendre chaque produit
-        numColumns={2} // Nombre de colonnes
-        contentContainerStyle={styles.listContent}
-        ListEmptyComponent={
-          <Text style={{ color: '#fff', textAlign: 'center', marginTop: 20 }}>
-            Aucun produit disponible
-          </Text>
-        }
-      />
-    </View>
+    <ImageBackground
+      source={BackgroundImage}
+      style={styles.backgroundImage}
+    >
+      {/* Superposition d'un filtre noir en transparence */}
+      <View style={styles.overlay} />
+
+      {/* Contenu scrollable */}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {/* Titre "Merchandising" */}
+        <Text style={styles.title}>Merchandising</Text>
+
+        {/* Image "sweat" cliquable */}
+        <TouchableOpacity onPress={() => handleImagePress(TopImage)}>
+          <Image source={TopImage} style={styles.topImage} />
+        </TouchableOpacity>
+
+        {/* Image "logo" sous l'image "sweat" */}
+        <Image source={LogoImage} style={styles.logoImage} />
+
+        {/* Image "teeshirt_fest" cliquable */}
+        <TouchableOpacity onPress={() => handleImagePress(TeeshirtImage)}>
+          <Image source={TeeshirtImage} style={styles.teeshirtImage} />
+        </TouchableOpacity>
+
+        {/* Nouvelle image "part" sous l'image du teeshirt */}
+        <Image source={PartImage} style={styles.partImage} />
+      </ScrollView>
+
+      {/* Modal pour afficher l'image en grand */}
+      <Modal
+        visible={modalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={closeModal}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity style={styles.modalOverlay} onPress={closeModal} />
+          {selectedImage && (
+            <Image source={selectedImage} style={styles.zoomedImage} />
+          )}
+        </View>
+      </Modal>
+    </ImageBackground>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  screenContainer: {
-    flex: 1, // Prendre tout l'espace disponible
-    backgroundColor: '#000', // Couleur de fond noire
-    //justifyContent: 'center', // Centrer les éléments verticalement
-    padding : 8,
-    //alignItems: 'center', // Centrer les éléments horizontalement
+  backgroundImage: {
+    flex: 1,
   },
-  listContent: {
-    //padding: 16, // Espacement autour de la liste
-    //alignItems: 'center', // Centrer les items dans la liste
-    paddingBottom : 16, 
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  scrollContainer: {
+    paddingVertical: 20,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#fff',
+    fontFamily: 'RockSalt',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  topImage: {
+    width: 360,
+    height: 280,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.8,
+    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 10 },
+    borderRadius: 30,
+  },
+  logoImage: {
+    width: 150,
+    height: 120,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.8,
+    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 10 },
+    borderRadius: 20,
+  },
+  teeshirtImage: {
+    width: 350,
+    height: 370,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.8,
+    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 10 },
+    borderRadius: 20,
+  },
+  partImage: {
+    width: 360,
+    height: 450,
+    marginBottom: 20,
+    opacity: 0.5,
+    shadowColor: '#000',
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+    borderRadius: 20,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     justifyContent: 'center',
+    alignItems: 'center',
   },
-  productContainer: {
-    flex : 1,
-    padding: 8, // Espacement interne pour chaque produit
-    backgroundColor: '#444', // Couleur de fond des produits
-    borderRadius: 8, // Coins arrondis
-    margin: 8, // Espacement entre les produits
-    shadowColor: '#000', // Couleur de l'ombre
-    shadowOpacity: 0.1, // Opacité de l'ombre
-    shadowRadius: 4, // Rayon de l'ombre
-    elevation: 2, // Élévation pour Android
-    alignItems : 'center',
+  modalOverlay: {
+    ...StyleSheet.absoluteFillObject,
   },
-  productName: {
-    fontSize: 16, // Taille de police du nom
-    fontWeight: 'bold', // Texte en gras
-    marginBottom: 4, // Espacement en bas
-    color: '#fff', // Couleur du texte blanche
+  zoomedImage: {
+    width: width * 0.9,
+    height: width * 0.9,
+    resizeMode: 'contain',
   },
-  productPrice: {
-    fontSize: 14, // Taille de police du prix
-    color: '#ddd', // Couleur du texte
-    marginBottom: 4, // Espacement en bas
-  },
-  productSize: {
-    fontSize: 12, // Taille de police pour la taille
-    color: '#aaa', // Couleur grise pour le texte
-  },
-  productImage: {
-    width: width / 2 - 48, //largeur image 
-    height : width / 2 - 48, //hauteur image 
-    marginBottom: 8, //espacement en dessous de image
-    borderRadius : 8,
-  }
 });
+
+export default Merch;
