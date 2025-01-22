@@ -6,6 +6,15 @@ import GroupModal from '../popUp_Groups';
 import { dayOneGroups, dayTwoGroups } from '../../data/groupsData';
 
 const { width, height } = Dimensions.get('window');
+const colors = {
+  black: 'rgb(0, 0, 0)', 
+  lightGray: 'rgb(131, 131, 131)',
+  darkGray: 'rgb(93, 92, 92)',
+  green: 'rgb(40, 144, 9)',
+  lightGreen: 'rgb(131, 131, 131)',
+  background: 'rgb(84, 81, 81)'
+};
+
 
 // Définir le type pour un groupe
 export type Group = {
@@ -139,6 +148,7 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
   return (
     <SafeAreaView style={styles.screenContainer}>
       {/* Curseur d'avancée */}
+      
       <View style={styles.progressContainer}>
         {isToday && (
           <Text style={styles.currentTimeText}>
@@ -159,6 +169,7 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
       </View>
 
       {/* Liste des groupes */}
+      <View style={styles.backgroundContainer}>
       <FlatList
         ref={flatListRef}
         data={groups}
@@ -172,6 +183,7 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
         initialNumToRender={5}
         contentContainerStyle={styles.listContent}
       />
+      </View>
       <GroupModal visible={isModalVisible} onClose={closeModal} group={selectedGroup} />
     </SafeAreaView>
   );
@@ -186,10 +198,29 @@ export default function ConcertTabs() {
       <Tab.Navigator
         screenOptions={{
           swipeEnabled: true,
-          tabBarLabelStyle: { fontSize: 20, fontWeight: 'bold', textTransform: 'none', color: '#000', textAlign: 'center', width: '100%' },
-          tabBarStyle: { height: 80, backgroundColor: '#fff', elevation: 5, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 4, justifyContent: 'center' },
-          tabBarIndicatorStyle: { backgroundColor: '#289009', height: 4, borderRadius: 2 },
-          tabBarPressColor: '#c4f1c4',
+          tabBarLabelStyle: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            textTransform: 'none',
+            color: colors.black,  // Utilisation de la couleur définie
+            textAlign: 'center',
+            width: '100%',
+          },
+          tabBarStyle: {
+            height: 80,
+            backgroundColor: colors.lightGray,  // Utilisation de la couleur gris clair
+            elevation: 5,
+            shadowColor: colors.black,  // Utilisation de la couleur noire pour l'ombre
+            shadowOpacity: 0.2,
+            shadowRadius: 4,
+            justifyContent: 'center',
+          },
+          tabBarIndicatorStyle: {
+            backgroundColor: colors.green,  // Utilisation de la couleur verte
+            height: 4,
+            borderRadius: 2,
+          },
+          tabBarPressColor: colors.lightGreen,  // Utilisation de la couleur vert clair
         }}
       >
         <Tab.Screen name="Ven. 23 Mai">
@@ -204,17 +235,21 @@ export default function ConcertTabs() {
 }
 
 const styles = StyleSheet.create({
+  backgroundContainer: {
+    flex: 1,
+    backgroundColor: colors.background,  // Ajout du fond personnalisé
+  },
   screenContainer: {
     flexDirection: 'row',
     flex: 1,
   },
   safeArea: {
     flex: 1,
-    paddingTop: 100,
+    backgroundColor: colors.lightGray,
   },
   progressContainer: {
     width: width * 0.05,
-    backgroundColor: '#ddd',
+    backgroundColor: 'rgb(131, 131, 131)',
     borderRadius: 8,
     overflow: 'hidden',
     alignItems: 'center',
@@ -224,7 +259,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     width: '100%',
-    backgroundColor: '#289009',
+    backgroundColor: 'rgb(14, 93, 8)',
     position: 'absolute',
     bottom: 0,
     borderRadius: 8,
@@ -232,7 +267,7 @@ const styles = StyleSheet.create({
   currentTimeText: {
     fontSize: height * 0.015,
     fontWeight: '600',
-    color: '#333',
+    color: 'rgb(14, 93, 8)',
     marginBottom: height * 0.005,  
   },
   listContent: {
@@ -242,7 +277,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: width * 0.03,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: 'rgb(131, 131, 131)',
     marginVertical: height * 0.01,
     marginHorizontal: width * 0.03,
     borderRadius: 10,
@@ -252,11 +287,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0e0e0',
   },
   currentGroup: {
-    backgroundColor: '#62ff3b',
+    backgroundColor: 'rgb(24, 153, 15)',
   },
   futureGroup: {
     opacity: 0.8,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgb(225, 225, 225)',
   },
   groupImage: {
     width: width * 0.2,
