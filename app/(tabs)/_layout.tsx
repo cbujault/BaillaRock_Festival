@@ -7,7 +7,6 @@ import {
   StyleSheet,
   View,
   StatusBar,
-  SafeAreaView,
 } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
@@ -20,7 +19,8 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <SafeAreaView style={styles.container}>
+    // Supprimer le SafeAreaView ici
+    <View style={styles.container}>  {/* Utiliser View à la place */}
       {/* Barre d'état non translucide avec un arrière-plan */}
       <StatusBar
         translucent={false}
@@ -88,7 +88,7 @@ export default function TabLayout() {
           options={{
             title: 'Village',
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home" size={size} color={color} />
+              <Ionicons name="beer" size={size} color={color} />
             ),
           }}
         />
@@ -103,7 +103,7 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-    </SafeAreaView>
+    </View> 
   );
 }
 

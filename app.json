@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/Dragon.png",
     "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "com.company.baillarockfestival", 

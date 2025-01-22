@@ -182,22 +182,24 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function ConcertTabs() {
   return (
-    <Tab.Navigator
-      screenOptions={{
-        swipeEnabled: true,
-        tabBarLabelStyle: { fontSize: 20, fontWeight: 'bold', textTransform: 'none', color: '#000', textAlign: 'center', width: '100%' },
-        tabBarStyle: { height: 80, backgroundColor: '#fff', elevation: 5, shadowColor: '#000', shadowOpacity: 0.2,shadowRadius: 4, justifyContent: 'center' },
-        tabBarIndicatorStyle: { backgroundColor: '#289009', height: 4, borderRadius: 2 },
-        tabBarPressColor: '#c4f1c4',
-      }}
-    >
-      <Tab.Screen name="Ven. 23 Mai">
-        {() => <DayScreen groups={dayOneGroups} festivalDate="2025-05-23" />}
-      </Tab.Screen>
-      <Tab.Screen name="Sam. 24 Mai">
-        {() => <DayScreen groups={dayTwoGroups} festivalDate="2025-05-24" />}
-      </Tab.Screen>
-    </Tab.Navigator>
+    <SafeAreaView style={styles.safeArea}>
+      <Tab.Navigator
+        screenOptions={{
+          swipeEnabled: true,
+          tabBarLabelStyle: { fontSize: 20, fontWeight: 'bold', textTransform: 'none', color: '#000', textAlign: 'center', width: '100%' },
+          tabBarStyle: { height: 80, backgroundColor: '#fff', elevation: 5, shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 4, justifyContent: 'center' },
+          tabBarIndicatorStyle: { backgroundColor: '#289009', height: 4, borderRadius: 2 },
+          tabBarPressColor: '#c4f1c4',
+        }}
+      >
+        <Tab.Screen name="Ven. 23 Mai">
+          {() => <DayScreen groups={dayOneGroups} festivalDate="2025-05-23" />}
+        </Tab.Screen>
+        <Tab.Screen name="Sam. 24 Mai">
+          {() => <DayScreen groups={dayTwoGroups} festivalDate="2025-05-24" />}
+        </Tab.Screen>
+      </Tab.Navigator>
+    </SafeAreaView>
   );
 }
 
@@ -205,6 +207,10 @@ const styles = StyleSheet.create({
   screenContainer: {
     flexDirection: 'row',
     flex: 1,
+  },
+  safeArea: {
+    flex: 1,
+    paddingTop: 100,
   },
   progressContainer: {
     width: width * 0.05,
