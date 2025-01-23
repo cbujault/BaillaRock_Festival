@@ -9,7 +9,7 @@
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "ios": {
-      "bundleIdentifier": "com.company.baillarockfestival", 
+      "bundleIdentifier": "com.company.baillarockfestival",
       "buildNumber": "1.0.0"
     },
     "android": {
@@ -17,7 +17,7 @@
         "foregroundImage": "./assets/images/lea.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.company.baillarockfestival",  
+      "package": "com.company.baillarockfestival",
       "versionCode": 1
     },
     "web": {
@@ -40,6 +40,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "1b0759cf-808e-4506-9e86-f7185a3c1702"
+      }
     }
   }
 }

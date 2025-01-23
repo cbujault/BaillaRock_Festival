@@ -12,9 +12,8 @@ const colors = {
   darkGray: 'rgb(93, 92, 92)',
   green: 'rgb(40, 144, 9)',
   lightGreen: 'rgb(131, 131, 131)',
-  background: 'rgb(84, 81, 81)'
+  background: 'rgb(84, 81, 81)',
 };
-
 
 // Définir le type pour un groupe
 export type Group = {
@@ -35,6 +34,12 @@ type DayScreenProps = {
 
 function DayScreen({ groups, festivalDate }: DayScreenProps) {
   const flatListRef = useRef<FlatList<Group>>(null);
+
+  // Convertir une heure en décimal
+  const timeToDecimal = (time: string) => {
+    const [hours, minutes] = time.split(':').map((x) => parseFloat(x));
+    return hours + minutes / 60;
+  };
 
   // Obtenir l'heure actuelle et la date
   const now = new Date();
@@ -57,18 +62,19 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
 
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
+
   const openModal = (group: Group) => {
     setSelectedGroup(group);
     setModalVisible(true);
-    };
+  };
+
   const closeModal = () => {
     setSelectedGroup(null);
     setModalVisible(false);
   };
-  
-  // Faire défiler automatiquement au groupe en cours si c'est aujourd'hui
+
+  // Mettre à jour l'heure toutes les minutes
   useEffect(() => {
-    // Mettre à jour l'heure toutes les minutes pour une progression fluide
     const interval = setInterval(() => {
       const now = new Date();
       setCurrentTime(now.getHours() + now.getMinutes() / 60);
@@ -83,106 +89,64 @@ function DayScreen({ groups, festivalDate }: DayScreenProps) {
     }
   }, [currentIndex, isToday]);  
 
-  // Calculer la progression en pourcentage (curseur latéral)
-  const calculateProgressHeight = () => {
-    const totalDuration = groups.reduce(
-      (acc, group) =>
-        acc +
-        (timeToDecimal(group.endTime) - timeToDecimal(group.startTime)),
-      0,
-    );
+ // Déterminer le style du groupe en fonction de l'heure
+const getGroupStyle = (group: Group) => {
+  const startTime = timeToDecimal(group.startTime);
+  const endTime = timeToDecimal(group.endTime);
 
-    if (totalDuration === 0 || !isToday) return 0;
+  if (!isToday) {
+    return { containerStyle: {}, imageStyle: styles.groupImage, timeText: `${group.startTime} - ${group.endTime}` };
+  }
 
-    const elapsedTime = groups.reduce((acc, group, index) => {
-      const startTime = timeToDecimal(group.startTime);
-      const endTime = timeToDecimal(group.endTime);
-      if (currentTime >= endTime) {
-        return acc + (endTime - startTime);
-      } else if (currentTime >= startTime && currentTime <= endTime) {
-        return acc + (currentTime - startTime);
-      }
-      return acc;
-    }, 0);
+  if (currentTime > endTime) {
+    return { containerStyle: styles.pastGroup, imageStyle: styles.groupImage, timeText: `${group.startTime} - ${group.endTime}` };
+  } else if (currentTime >= startTime && currentTime <= endTime) {
+    return {
+      containerStyle: styles.currentGroup,
+      imageStyle: styles.currentGroupImage,
+      timeText: 'En cours',
+    };
+  }
 
-    return (elapsedTime / totalDuration) * 100;
-  };
-  
-  // Convertir une heure en décimal
-  const timeToDecimal = (time: string) => {
-    const [hours, minutes] = time.split(':').map((x) => parseFloat(x));
-    return hours + minutes / 60;
-  };
+  return { containerStyle: styles.futureGroup, imageStyle: styles.groupImage, timeText: `${group.startTime} - ${group.endTime}` };
+};
 
-  // Déterminer le style du groupe en fonction de l'heure
-  const getGroupStyle = (group: Group) => {
-    const startTime = timeToDecimal(group.startTime);
-    const endTime = timeToDecimal(group.endTime);
+const renderGroup = ({ item }: { item: Group }) => {
+  const { containerStyle, imageStyle, timeText } = getGroupStyle(item);
 
-    if (!isToday) {
-      return {}; // Pas de mise en évidence si ce n'est pas aujourd'hui
-    }
-
-    if (currentTime > endTime) {
-      return styles.pastGroup;
-    } else if (currentTime >= startTime && currentTime <= endTime) {
-      return styles.currentGroup;
-    }
-    return styles.futureGroup;
-  };
-
-  const renderGroup = ({ item }: { item: Group }) => (
-    <TouchableOpacity style={[styles.groupContainer]} onPress={() => openModal(item)}>
-      <Image source={item.image} style={styles.groupImage} />
+  return (
+    <TouchableOpacity
+      style={[styles.groupContainer, containerStyle]}
+      onPress={() => openModal(item)}
+    >
+      <Image source={item.image} style={imageStyle} />
       <View style={styles.groupDetails}>
         <Text style={styles.groupName}>{item.name}</Text>
         <Text style={styles.groupGenre}>{item.genre}</Text>
       </View>
-      <Text style={styles.groupTime}>
-        {item.startTime} - {item.endTime}
-      </Text>
+      <Text style={styles.groupTime}>{timeText}</Text>
     </TouchableOpacity>
   );
-    
+};
 
+    
   return (
     <SafeAreaView style={styles.screenContainer}>
-      {/* Curseur d'avancée */}
-      
-      <View style={styles.progressContainer}>
-        {isToday && (
-          <Text style={styles.currentTimeText}>
-            {`${Math.floor(currentTime)}:${Math.round(
-              (currentTime % 1) * 60,
-            )
-              .toString()
-              .padStart(2, '0')}`}
-          </Text>
-        )}
-        {/* Barre de progression dynamique */}
-        <View
-          style={[
-            styles.progressBar,
-            { height: `${calculateProgressHeight()}%` },
-          ]}
-        />
-      </View>
-
       {/* Liste des groupes */}
       <View style={styles.backgroundContainer}>
-      <FlatList
-        ref={flatListRef}
-        data={groups}
-        keyExtractor={(item) => item.id}
-        renderItem={renderGroup}
-        getItemLayout={(data, index) => ({
-          length: 110,
-          offset: 110 * index,
-          index,
-        })}
-        initialNumToRender={5}
-        contentContainerStyle={styles.listContent}
-      />
+        <FlatList
+          ref={flatListRef}
+          data={groups}
+          keyExtractor={(item) => item.id}
+          renderItem={renderGroup}
+          getItemLayout={(data, index) => ({
+            length: 110,
+            offset: 110 * index,
+            index,
+          })}
+          initialNumToRender={5}
+          contentContainerStyle={styles.listContent}
+        />
       </View>
       <GroupModal visible={isModalVisible} onClose={closeModal} group={selectedGroup} />
     </SafeAreaView>
@@ -202,25 +166,25 @@ export default function ConcertTabs() {
             fontSize: 20,
             fontWeight: 'bold',
             textTransform: 'none',
-            color: colors.black,  // Utilisation de la couleur définie
+            color: colors.black,
             textAlign: 'center',
             width: '100%',
           },
           tabBarStyle: {
             height: 80,
-            backgroundColor: colors.lightGray,  // Utilisation de la couleur gris clair
+            backgroundColor: colors.lightGray,
             elevation: 5,
-            shadowColor: colors.black,  // Utilisation de la couleur noire pour l'ombre
+            shadowColor: colors.black,
             shadowOpacity: 0.2,
             shadowRadius: 4,
             justifyContent: 'center',
           },
           tabBarIndicatorStyle: {
-            backgroundColor: colors.green,  // Utilisation de la couleur verte
+            backgroundColor: colors.green,
             height: 4,
             borderRadius: 2,
           },
-          tabBarPressColor: colors.lightGreen,  // Utilisation de la couleur vert clair
+          tabBarPressColor: colors.lightGreen,
         }}
       >
         <Tab.Screen name="Ven. 23 Mai">
@@ -237,38 +201,14 @@ export default function ConcertTabs() {
 const styles = StyleSheet.create({
   backgroundContainer: {
     flex: 1,
-    backgroundColor: colors.background,  // Ajout du fond personnalisé
+    backgroundColor: colors.background,
   },
   screenContainer: {
-    flexDirection: 'row',
     flex: 1,
   },
   safeArea: {
     flex: 1,
     backgroundColor: colors.lightGray,
-  },
-  progressContainer: {
-    width: width * 0.05,
-    backgroundColor: 'rgb(131, 131, 131)',
-    borderRadius: 8,
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    marginVertical: height * 0.01,
-    marginHorizontal: width * 0.02,
-  },
-  progressBar: {
-    width: '100%',
-    backgroundColor: 'rgb(14, 93, 8)',
-    position: 'absolute',
-    bottom: 0,
-    borderRadius: 8,
-  },
-  currentTimeText: {
-    fontSize: height * 0.015,
-    fontWeight: '600',
-    color: 'rgb(14, 93, 8)',
-    marginBottom: height * 0.005,  
   },
   listContent: {
     paddingBottom: height * 0.02,
@@ -288,6 +228,15 @@ const styles = StyleSheet.create({
   },
   currentGroup: {
     backgroundColor: 'rgb(24, 153, 15)',
+    borderWidth: 2,
+    borderColor: 'rgb(0, 255, 0)',
+    elevation: 5,
+  },
+  currentGroupImage: {
+    width: width * 0.25,
+    height: width * 0.25,
+    borderRadius: 15,
+    marginRight: width * 0.03,
   },
   futureGroup: {
     opacity: 0.8,
@@ -311,8 +260,8 @@ const styles = StyleSheet.create({
     color: '#555',
   },
   groupTime: {
-    fontSize: height * 0.02,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: height * 0.015,
+    fontWeight: '500',
+    color: colors.darkGray,
   },
 });

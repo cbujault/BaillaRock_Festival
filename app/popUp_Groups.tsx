@@ -23,6 +23,10 @@ export default function GroupModal({ visible, onClose, group }: GroupModalProps)
   return (
     <Modal animationType="slide" transparent={true} visible={visible}>
       <View style={styles.modalContainer}>
+        {/* Icône de fermeture en haut à droite */}
+        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <FontAwesome name="times" size={30} color="green" />
+        </TouchableOpacity>
         <View style={styles.banner}>
           <View style={styles.textContainer}>
             <Text style={styles.groupName}>{group.name}</Text>
@@ -44,9 +48,6 @@ export default function GroupModal({ visible, onClose, group }: GroupModalProps)
             </TouchableOpacity>
           </View>
         </View>
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <Text style={styles.closeText}>Fermer</Text>
-        </TouchableOpacity>
       </View>
     </Modal>
   );
@@ -96,14 +97,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   closeButton: {
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000',
-  },
-  closeText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
   },
 });
