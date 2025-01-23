@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Modal, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal, View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // Pour les icônes des réseaux sociaux
 import { ImageSourcePropType } from 'react-native';
 
@@ -24,9 +24,11 @@ export default function GroupModal({ visible, onClose, group }: GroupModalProps)
     <Modal animationType="slide" transparent={true} visible={visible}>
       <View style={styles.modalContainer}>
         {/* Icône de fermeture en haut à droite */}
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <FontAwesome name="times" size={30} color="green" />
-        </TouchableOpacity>
+        <SafeAreaView>
+          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <FontAwesome name="times" size={30} color="green" />
+          </TouchableOpacity>
+        </SafeAreaView>
         <View style={styles.banner}>
           <View style={styles.textContainer}>
             <Text style={styles.groupName}>{group.name}</Text>
