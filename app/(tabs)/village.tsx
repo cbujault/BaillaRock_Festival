@@ -1,110 +1,135 @@
-import { StyleSheet, Image, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, Dimensions, Image, TouchableOpacity, ScrollView } from 'react-native';
+import ExpoModal from '../popUp_Expo'; 
+import { Exposants } from '../../data/ExposantsData';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import React from 'react';
+const { width } = Dimensions.get('window');
 
-export default function TabTwoScreen() {
+// Type pour un exposant (importé depuis `ExposantsData.ts`)
+export type ListExpo = {
+  id : string; 
+  name: string;
+  genre: string;
+  description: string;
+  image: number;
+};
+
+// Largeur par défaut (modifiable)
+const EXPO_CONTAINER_WIDTH = width / 2 - 70;
+
+export default function Village() {
+  const [selectedExpo, setSelectedExpo] = useState<ListExpo | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [expoWidth, setExpoWidth] = useState(EXPO_CONTAINER_WIDTH); // État pour ajuster la largeur
+
+  const handleExpoPress = (expo: ListExpo) => {
+    setSelectedExpo(expo);
+    setModalVisible(true);
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
+    <View style={styles.screenContainer}>
+      {/* Titre de la page */}
+      <Text style={styles.pageTitle}>Exposants</Text>
+
+      {/* Slider pour ajuster la largeur (optionnel) */}
+      <View style={styles.sliderContainer}>
+        <Text style={styles.sliderLabel}>Largeur des exposants : {Math.round(expoWidth)} px</Text>
+        <input
+          type="range"
+          min="100"
+          max={width - 50}
+          value={expoWidth}
+          onChange={(e) => setExpoWidth(Number(e.target.value))}
+          style={styles.slider}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+      </View>
+
+      {/* Liste horizontale des exposants */}
+      <ScrollView 
+        horizontal 
+        contentContainerStyle={styles.horizontalListContent}
+        showsHorizontalScrollIndicator={false}
+      >
+        {Exposants.map((item) => (
+          <TouchableOpacity
+            key={item.id}
+            style={[styles.expoContainer, { width: expoWidth }]} // Largeur dynamique
+            onPress={() => handleExpoPress(item)}
+          >
+            <Image style={[styles.expoImage, { width: expoWidth - 40 }]} source={item.image} resizeMode="contain" />
+            <Text style={styles.expoName}>{item.name || 'Nom inconnu'}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      {/* Modal pour afficher les détails d'un exposant */}
+      <ExpoModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        expo={selectedExpo}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  screenContainer: {
+    flex: 1,
+    backgroundColor: '#000',
+    padding: 8,
+    paddingTop: 70, // Ajout d'un espace en haut
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+  pageTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+    marginBottom: 24, // Plus d'espace en dessous du titre
+  },
+  sliderContainer: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  sliderLabel: {
+    color: '#fff',
+    marginBottom: 8,
+  },
+  slider: {
+    width: width - 50,
+  },
+  horizontalListContent: {
+    flexDirection: 'row', // Aligner horizontalement
+    alignItems: 'center',
+    paddingHorizontal: 8,
+  },
+  expoContainer: {
+    padding: 8,
+    backgroundColor: '#444',
+    borderRadius: 8,
+    marginHorizontal: 8, // Espacement horizontal entre les éléments
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  expoName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginTop: 8,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  expoImage: {
+    height: width / 4 - 32,
+    marginBottom: 8,
+    borderRadius: 10,
+  },
+  emptyText: {
+    color: '#fff',
+    textAlign: 'center',
+    marginTop: 40, // Ajout d'espace si la liste est vide
   },
 });
