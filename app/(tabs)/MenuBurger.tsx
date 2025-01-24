@@ -1,86 +1,76 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
-import { FontAwesome } from '@expo/vector-icons'; // Pour les icônes
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function Menu() {
   const router = useRouter();
 
-  // Fonction pour naviguer vers Merch
-  const handleNavigateToMerch = () => {
-    router.push('../Categories_menu/Merch');
-  };
-
-  // Fonction pour naviguer vers Partenaires
-  const handleNavigateToPartenaires = () => {
-    router.push('../Categories_menu/Partenaire');
-  };
-
-    // Fonction pour naviguer vers Prevention
-    const handleNavigateToPrevention = () => {
-      router.push('../Categories_menu/Prevention');
-    };
-
   return (
-    <View style={styles.container}>
-      {/* Test d'affichage d'une image sans ImageBackground */}
-      <Image
-        source={require('../../assets/images/Affiche_fest_25.png')}
-        style={styles.backgroundImage}
-      />
-
-      {/* Boutons personnalisés avec des icônes */}
-      <TouchableOpacity style={styles.button} onPress={handleNavigateToMerch}>
-        <FontAwesome name="shopping-cart" size={20} color="#fff" />
-        <Text style={styles.buttonText}>Merchandising</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button} onPress={handleNavigateToPartenaires}>
-        <FontAwesome name="users" size={20} color="#fff" />
-        <Text style={styles.buttonText}>Les partenaires</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button} onPress={handleNavigateToPrevention}>
-        <FontAwesome name="warning" size={20} color="#fff" />
-        <Text style={styles.buttonText}>Prevention</Text>
-      </TouchableOpacity>
-    </View>
+    <ImageBackground source={require('../../assets/images/Affiche_fest_25.png')} style={styles.backgroundImage}>
+      <View style={styles.overlay}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Menu Principal</Text>
+          <MenuButton icon="shopping-cart" text="Merchandising" onPress={() => router.push('../Categories_menu/Merch')} />
+          <MenuButton icon="users" text="Les partenaires" onPress={() => router.push('../Categories_menu/Partenaire')} />
+          <MenuButton icon="warning" text="Prévention" onPress={() => router.push('../Categories_menu/Prevention')} />
+        </View>
+      </View>
+    </ImageBackground>
   );
 }
 
-// StyleSheet
-const styles = StyleSheet.create({
-  container: {
-    flex: 1, // Cela permet au conteneur de prendre toute la taille de l'écran
-    justifyContent: 'center', // Centrer les éléments verticalement
-    alignItems: 'center', // Centrer les éléments horizontalement
-    padding: 20,
-  },
-  backgroundImage: {
-    position: 'absolute', // Permet de placer l'image derrière tout le contenu
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: '210%', // S'assure que l'image occupe toute la largeur de l'écran
-    height: '160%', // S'assure que l'image occupe toute la hauteur de l'écran
-    zIndex: -1, // S'assure que l'image reste en arrière-plan
-  },
+const MenuButton = ({ icon, text, onPress }) => (
+  <TouchableOpacity style={styles.button} onPress={onPress}>
+    <FontAwesome name={icon} size={24} color="#fff" />
+    <Text style={styles.buttonText}>{text}</Text>
+  </TouchableOpacity>
+);
 
+const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Ajout d'un overlay pour une meilleure lisibilité
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+    width: '90%',
+    padding: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Fond semi-transparent
+    borderRadius: 15,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 20,
+  },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#388E3C', // Couleur de fond du bouton
-    paddingVertical: 12,
+    backgroundColor: '#4CAF50',
+    paddingVertical: 15,
     paddingHorizontal: 20,
-    borderRadius: 8,
+    borderRadius: 10,
     marginBottom: 15,
-    width: '80%', // Largeur du bouton
-    justifyContent: 'center', // Centrer le texte et l'icône
+    width: '100%',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
   },
   buttonText: {
     fontSize: 18,
     color: '#fff',
-    marginLeft: 10, // Espacement entre l'icône et le texte
+    marginLeft: 10,
   },
 });

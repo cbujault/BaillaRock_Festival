@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity, Dimensions, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity, Dimensions, SafeAreaView, Linking } from 'react-native';
 import { ImageSourcePropType } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import GroupModal from '../popUp_Groups';
@@ -15,6 +15,11 @@ const colors = {
   background: 'rgb(84, 81, 81)',
 };
 
+export type SocialLink = {
+  name: string;
+  url: string;
+};
+
 // Définir le type pour un groupe
 export type Group = {
   id: string;
@@ -23,7 +28,9 @@ export type Group = {
   startTime: string;
   endTime: string;
   image: ImageSourcePropType;
+  bannerImage: ImageSourcePropType;
   description: string;
+  socialLinks: SocialLink[];
 };
 
 // Définir les props pour l'écran
