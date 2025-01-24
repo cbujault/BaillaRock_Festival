@@ -6,6 +6,7 @@ import { homeConfig } from '@/config/Config_HomePage'; // Configuration des asse
 import { FontAwesome, Ionicons, MaterialIcons } from 'react-native-vector-icons'; // Import des icônes
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import * as Font from 'expo-font'
 
 export default function HomeScreen() {
   const [timeLeft, setTimeLeft] = useState({
@@ -72,6 +73,26 @@ export default function HomeScreen() {
     router.push('/(tabs)/explore');
   };
 
+    // Charger la police 'Capsmall'
+    useEffect(() => {
+      const loadFonts = async () => {
+        await Font.loadAsync({
+          'Capsmall': require('../../assets/fonts/Capsmall.ttf'),
+        });
+        setFontLoaded(true); // Mettre à jour l'état une fois la police chargée
+      };
+      loadFonts();
+    }, []);
+
+    // Si la police n'est pas chargée, afficher un écran de chargement
+    if (!setFontLoaded) {
+      return (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Chargement...</Text>
+        </View>
+      );
+    }
+
   // Rendu principal
   return (
     <ScrollView
@@ -97,7 +118,7 @@ export default function HomeScreen() {
           />
         )}
         <View style={styles.overlay}>
-          <Text style={styles.TitleText}>{homeConfig.festivalName}</Text>
+        <Text style={styles.TitleText}>{homeConfig.festivalName}</Text>
           {timeExpired ? (
             <>
               <Text style={styles.expiredText}>{homeConfig.messages.countdownExpired}</Text>
@@ -234,13 +255,14 @@ const styles = StyleSheet.create({
   },
   
   TitleText: {
-    fontSize: 35, // Taille du texte
+    fontSize: 65, // Taille du texte
     fontWeight: 'bold', // Gras
     color: 'white', // Couleur blanche
     marginBottom: 20, // Espacement entre le texte et le compteur
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
+    textAlign: 'center', // Centrer horizontalement le texte
+    fontFamily: 'Capsmall',
+    // Supprimer alignContent et justifyContent, ces propriétés sont plus adaptées à des conteneurs de type flexbox.
+},
 
   countdownContainer: {
     marginVertical: 20,
@@ -386,4 +408,8 @@ const styles = StyleSheet.create({
 
   
 });
+
+function setFontLoaded(arg0: boolean) {
+  throw new Error('Function not implemented.');
+}
 

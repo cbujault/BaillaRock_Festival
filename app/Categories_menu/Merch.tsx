@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -10,20 +10,38 @@ import {
   Modal,
   TouchableOpacity,
 } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'; // Importation d'icône FontAwesome
+import { FontAwesome } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native'; // Hook pour la navigation
+import { useRouter } from 'expo-router'; // Hook pour la navigation entre les pages
 
 // Import des images
 const BackgroundImage = require('../../assets/images/Merch/Affiche_drag.png');
-const TopImage = require('../../assets/images/Merch/sweat.png'); // Image du sweat
-const LogoImage = require('../../assets/images/Merch/logo.png'); // Image du logo
-const TeeshirtImage = require('../../assets/images/Merch/teeshirt_fest.png'); // Image du teeshirt
-const PartImage = require('../../assets/images/Merch/part.png'); // Nouvelle image part
+const TopImage = require('../../assets/images/Merch/sweat.png');
+const LogoImage = require('../../assets/images/Merch/logo.png');
+const TeeshirtImage = require('../../assets/images/Merch/teeshirt_fest.png');
+const PartImage = require('../../assets/images/Merch/part.png');
 
 const { width, height } = Dimensions.get('window');
 
 const Merch: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const navigation = useNavigation(); // Hook pour la navigation
+  const router = useRouter(); // Hook pour la navigation entre les pages
+
+  // Charger et personnaliser l'en-tête dans useEffect
+  useEffect(() => {
+    navigation.setOptions({
+      title: 'Merchandising', // Titre de l'écran
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <FontAwesome name="arrow-left" size={30} color="'rgb(14, 93, 8)'" />
+          <Text style={styles.backText}>Retour</Text>
+        </TouchableOpacity>
+      ),
+      headerShown: true, // Afficher l'en-tête
+    });
+  }, [navigation, router]);
 
   const handleImagePress = (image: number) => {
     setSelectedImage(image);
@@ -37,42 +55,32 @@ const Merch: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {/* Image de fond fixe */}
       <ImageBackground
         source={BackgroundImage}
         style={styles.backgroundImage}
-        imageStyle={{ resizeMode: 'cover' }} // Ajuste l'image de fond pour ne pas être déformée
+        imageStyle={{ resizeMode: 'cover' }}
       >
-        {/* Superposition d'un filtre noir en transparence */}
         <View style={styles.overlay} />
       </ImageBackground>
 
-      {/* Contenu scrollable */}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Titre "Merchandising" */}
-        <Text style={styles.title}>Merchandising</Text>
+        <Text style={styles.title}></Text>
 
-        {/* Image "sweat" cliquable */}
         <TouchableOpacity onPress={() => handleImagePress(TopImage)}>
           <Image source={TopImage} style={styles.topImage} />
         </TouchableOpacity>
 
-        {/* Image "logo" sous l'image "sweat" */}
         <Image source={LogoImage} style={styles.logoImage} />
 
-        {/* Image "teeshirt_fest" cliquable */}
         <TouchableOpacity onPress={() => handleImagePress(TeeshirtImage)}>
           <Image source={TeeshirtImage} style={styles.teeshirtImage} />
         </TouchableOpacity>
 
-        {/* Nouvelle image "logo" entre teeshirt et part */}
         <Image source={LogoImage} style={styles.logoImage} />
 
-        {/* Nouvelle image "part" sous l'image du logo */}
         <Image source={PartImage} style={styles.partImage} />
       </ScrollView>
 
-      {/* Modal pour afficher l'image en grand */}
       <Modal
         visible={modalVisible}
         transparent
@@ -80,9 +88,8 @@ const Merch: React.FC = () => {
         onRequestClose={closeModal}
       >
         <View style={styles.modalContainer}>
-          {/* Croissance de la croix rouge en bas de l'écran */}
           <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-            <FontAwesome name="times" size={30} color='rgb(14, 93, 8)' />
+            <FontAwesome name="times" size={30} color="rgb(14, 93, 8)" />
           </TouchableOpacity>
 
           {selectedImage && (
@@ -100,19 +107,19 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     width: '100%',
-    height: height,  // Utilisation de la hauteur de l'écran pour une image de fond fixe
-    position: 'absolute',  // L'image reste derrière les autres éléments
+    height: height,
+    position: 'absolute',
     zIndex: -1,
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject, // Utilisation d'absolue pour recouvrir uniquement l'arrière-plan
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Superposition semi-transparente
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   scrollContainer: {
     paddingVertical: 20,
     alignItems: 'center',
-    zIndex: 1, // Assure que le contenu scrollable est au-dessus de l'overlay
-    paddingBottom: 50,  // Ajoute un espacement en bas pour éviter que la dernière image touche le bas de l'écran
+    zIndex: 1,
+    paddingBottom: 50,
   },
   title: {
     fontSize: 36,
@@ -131,7 +138,7 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     shadowOffset: { width: 0, height: 10 },
     borderRadius: 30,
-    zIndex: 2, // Assure que l'image est au-dessus de l'overlay
+    zIndex: 2,
   },
   logoImage: {
     width: 150,
@@ -142,7 +149,7 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     shadowOffset: { width: 0, height: 10 },
     borderRadius: 20,
-    zIndex: 2, // Assure que l'image est au-dessus de l'overlay
+    zIndex: 2,
   },
   teeshirtImage: {
     width: 350,
@@ -153,28 +160,25 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     shadowOffset: { width: 0, height: 10 },
     borderRadius: 20,
-    zIndex: 2, // Assure que l'image est au-dessus de l'overlay
+    zIndex: 2,
   },
   partImage: {
     width: 360,
     height: 390,
-    marginBottom: 60, // Ajout d'un espacement plus important en bas
+    marginBottom: 60,
     opacity: 0.5,
     shadowColor: '#000',
     shadowOpacity: 0.5,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 5 },
     borderRadius: 20,
-    zIndex: 2, // Assure que l'image est au-dessus de l'overlay
+    zIndex: 2,
   },
   modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  modalOverlay: {
-    ...StyleSheet.absoluteFillObject,
   },
   zoomedImage: {
     width: width * 0.9,
@@ -183,10 +187,20 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: '20%',  // Positionne la croix vers le bas de l'écran
+    top: '20%',
     right: 20,
-    zIndex: 3, // Assure que le bouton est au-dessus de l'image
+    zIndex: 3,
     backgroundColor: 'transparent',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 10,
+  },
+  backText: {
+    marginLeft: 5,
+    color: 'rgb(14, 93, 8)',
+    fontSize: 20,
   },
 });
 
