@@ -1,110 +1,174 @@
-import { StyleSheet, Image, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, Dimensions, Image, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
+import ExpoModal from '../popUp_Expo'; 
+import { Exposants, backgroundImage } from '../../data/ExposantsData'; // Importez ici
+import { Food } from '../../data/FoodData'; 
+import * as Font from 'expo-font'; // Importer le module expo-font
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import React from 'react';
+const { width } = Dimensions.get('window');
 
-export default function TabTwoScreen() {
+// Taille constante des containers
+const CONTAINER_WIDTH = width / 2 - 60;
+const IMAGE_HEIGHT = width / 2 - 60;
+
+export type ListExpo = {
+  id: string; 
+  name: string;
+  genre: string;
+  description: string;
+  image: number;
+};
+export type ListFood = {
+  id: string; 
+  name: string;
+  genre: string;
+  description: string;
+  image: number;
+};
+
+export default function Village() {
+  const [selectedExpo, setSelectedExpo] = useState<ListExpo | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [fontLoaded, setFontLoaded] = useState(false);
+
+  const handleExpoPress = (expo: ListExpo) => {
+    setSelectedExpo(expo);
+    setModalVisible(true);
+  };
+
+  // Charger la police
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        'Capsmall': require('../../assets/fonts/Capsmall.ttf'), // Spécifie le chemin de ta police
+      });
+      setFontLoaded(true);
+    };
+    loadFonts();
+  }, []);
+
+  // Afficher un écran vide ou un loader pendant le chargement des polices
+  if (!fontLoaded) {
+    return null; // Vous pouvez remplacer "null" par un indicateur de chargement
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
+    <ImageBackground
+      source={backgroundImage} // Utilisation de la variable importée
+      style={styles.backgroundImage}
+      resizeMode="cover"
+    >
+      <View style={styles.screenContainer}>
+        {/* Section Exposants */}
+        <Text style={[styles.pageTitle, styles.expoTitle]}>Exposants</Text>
+        <ScrollView 
+          horizontal 
+          contentContainerStyle={styles.horizontalListContent}
+          showsHorizontalScrollIndicator={false}
+        >
+          {Exposants.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.container}
+              onPress={() => handleExpoPress(item)}
+            >
+              <Image 
+                style={styles.expoImage} 
+                source={item.image} 
+                resizeMode="contain" 
+              />
+              <Text style={styles.expoName}>{item.name || 'Nom inconnu'}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        {/* Section Food */}
+        <Text style={[styles.pageTitle, styles.foodTitle]}>Food</Text>
+        <ScrollView 
+          horizontal 
+          contentContainerStyle={styles.horizontalListContent}
+          showsHorizontalScrollIndicator={false}
+        >
+          {Food.map((ListFood) => ( 
+            <TouchableOpacity
+              key={ListFood.id} 
+              style={styles.container}
+              onPress={() => handleExpoPress(ListFood)} 
+            >
+              <Image 
+                style={styles.expoImage} 
+                source={ListFood.image} 
+                resizeMode="contain" 
+              />
+              <Text style={styles.expoName}>{ListFood.name || 'Nom inconnu'}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        {/* Modal commun pour les deux sections */}
+        <ExpoModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          expo={selectedExpo}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+      </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  backgroundImage: {
+    flex: 1, // S'assure que l'image de fond occupe tout l'écran
   },
-  titleContainer: {
+  screenContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)', // Ajouter un fond semi-transparent pour améliorer la lisibilité
+    padding: 8,
+    paddingTop: 70,
+  },
+  pageTitle: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'left',
+    marginBottom: 15,
+    fontFamily: 'Capsmall', // Application de la police personnalisée
+  },
+  expoTitle: {
+    marginTop: 90, // Ajout d’un espace pour descendre la section Exposants
+  },
+  foodTitle: {
+    marginTop: -20, // Réduction pour rapprocher la section Food
+  },
+  horizontalListContent: {
     flexDirection: 'row',
-    gap: 8,
+    alignItems: 'flex-start',
+    paddingHorizontal: 8,
+  },
+  container: {  
+    width: CONTAINER_WIDTH, // Largeur fixe
+    padding: 8,
+    backgroundColor: '#444',
+    borderRadius: 8,
+    marginHorizontal: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  expoName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginTop: 8,
+    color: '#fff',
+    textAlign: 'center',
+  },
+  expoImage: {
+    width: CONTAINER_WIDTH - 40, // pour modifier la taille du logo
+    height: IMAGE_HEIGHT, // Hauteur fixe pour uniformiser les images
+    marginBottom: 8,
+    borderRadius: 10,
   },
 });

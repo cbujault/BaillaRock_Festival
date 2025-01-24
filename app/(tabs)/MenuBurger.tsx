@@ -16,6 +16,11 @@ export default function Menu() {
     router.push('../Categories_menu/Partenaire');
   };
 
+    // Fonction pour naviguer vers Prevention
+    const handleNavigateToPrevention = () => {
+      router.push('../Categories_menu/Prevention');
+    };
+
   return (
     <View style={styles.container}>
       {/* Test d'affichage d'une image sans ImageBackground */}
@@ -33,6 +38,11 @@ export default function Menu() {
       <TouchableOpacity style={styles.button} onPress={handleNavigateToPartenaires}>
         <FontAwesome name="users" size={20} color="#fff" />
         <Text style={styles.buttonText}>Les partenaires</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={handleNavigateToPrevention}>
+        <FontAwesome name="warning" size={20} color="#fff" />
+        <Text style={styles.buttonText}>Prevention</Text>
       </TouchableOpacity>
     </View>
   );
