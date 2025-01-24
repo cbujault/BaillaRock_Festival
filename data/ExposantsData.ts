@@ -22,4 +22,11 @@ export const Exposants: ListExpo[] = [
     image: require('../assets/images/Logo_Part/SaintG.png'), 
     description: 'La minute blonde est un bar à bieres blablabla',
   },
+  {
+  id: '4',
+  name: 'La Minute Blonde',
+  genre: 'Bar',
+  image: require('../assets/images/Logo_Part/SaintG.png'), 
+  description: 'La minute blonde est un bar à bieres blablabla',
+},
 ];

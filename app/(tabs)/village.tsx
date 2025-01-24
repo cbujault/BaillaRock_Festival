@@ -1,26 +1,33 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Dimensions, Image, TouchableOpacity, ScrollView } from 'react-native';
 import ExpoModal from '../popUp_Expo'; 
-import { Exposants } from '../../data/ExposantsData';
+import { Exposants } from '../../data/ExposantsData'; 
+import { Food } from '../../data/FoodData'; 
 
 const { width } = Dimensions.get('window');
 
-// Type pour un exposant (importé depuis `ExposantsData.ts`)
+// Taille constante des containers
+const CONTAINER_WIDTH = width / 2 - 60;
+const IMAGE_HEIGHT = width / 2 - 60;
+
 export type ListExpo = {
-  id : string; 
+  id: string; 
+  name: string;
+  genre: string;
+  description: string;
+  image: number;
+};
+export type ListFood = {
+  id: string; 
   name: string;
   genre: string;
   description: string;
   image: number;
 };
 
-// Largeur par défaut (modifiable)
-const EXPO_CONTAINER_WIDTH = width / 2 - 70;
-
 export default function Village() {
   const [selectedExpo, setSelectedExpo] = useState<ListExpo | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [expoWidth, setExpoWidth] = useState(EXPO_CONTAINER_WIDTH); // État pour ajuster la largeur
 
   const handleExpoPress = (expo: ListExpo) => {
     setSelectedExpo(expo);
@@ -29,23 +36,8 @@ export default function Village() {
 
   return (
     <View style={styles.screenContainer}>
-      {/* Titre de la page */}
-      <Text style={styles.pageTitle}>Exposants</Text>
-
-      {/* Slider pour ajuster la largeur (optionnel) */}
-      <View style={styles.sliderContainer}>
-        <Text style={styles.sliderLabel}>Largeur des exposants : {Math.round(expoWidth)} px</Text>
-        <input
-          type="range"
-          min="100"
-          max={width - 50}
-          value={expoWidth}
-          onChange={(e) => setExpoWidth(Number(e.target.value))}
-          style={styles.slider}
-        />
-      </View>
-
-      {/* Liste horizontale des exposants */}
+      {/* Section Exposants */}
+      <Text style={[styles.pageTitle, styles.expoTitle]}>Exposants</Text>
       <ScrollView 
         horizontal 
         contentContainerStyle={styles.horizontalListContent}
@@ -54,16 +46,43 @@ export default function Village() {
         {Exposants.map((item) => (
           <TouchableOpacity
             key={item.id}
-            style={[styles.expoContainer, { width: expoWidth }]} // Largeur dynamique
+            style={styles.container}
             onPress={() => handleExpoPress(item)}
           >
-            <Image style={[styles.expoImage, { width: expoWidth - 40 }]} source={item.image} resizeMode="contain" />
+            <Image 
+              style={styles.expoImage} 
+              source={item.image} 
+              resizeMode="contain" 
+            />
             <Text style={styles.expoName}>{item.name || 'Nom inconnu'}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
 
-      {/* Modal pour afficher les détails d'un exposant */}
+      {/* Section Food */}
+      <Text style={[styles.pageTitle, styles.foodTitle]}>Food</Text>
+      <ScrollView 
+        horizontal 
+        contentContainerStyle={styles.horizontalListContent}
+        showsHorizontalScrollIndicator={false}
+      >
+        {Food.map((ListFood) => ( 
+          <TouchableOpacity
+            key={ListFood.id} 
+            style={styles.container}
+            onPress={() => handleExpoPress(ListFood)} 
+          >
+            <Image 
+              style={styles.expoImage} 
+              source={ListFood.image} 
+              resizeMode="contain" 
+            />
+            <Text style={styles.expoName}>{ListFood.name || 'Nom inconnu'}</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      {/* Modal commun pour les deux sections */}
       <ExpoModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
@@ -78,36 +97,32 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
     padding: 8,
-    paddingTop: 70, // Ajout d'un espace en haut
+    paddingTop: 70,
   },
   pageTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
-    textAlign: 'center',
-    marginBottom: 24, // Plus d'espace en dessous du titre
+    textAlign: 'left',
+    marginBottom: 15,
   },
-  sliderContainer: {
-    alignItems: 'center',
-    marginBottom: 16,
+  expoTitle: {
+    marginTop: 90, // Ajout d’un espace pour descendre la section Exposants
   },
-  sliderLabel: {
-    color: '#fff',
-    marginBottom: 8,
-  },
-  slider: {
-    width: width - 50,
+  foodTitle: {
+    marginTop: -20, // Réduction pour rapprocher la section Food
   },
   horizontalListContent: {
-    flexDirection: 'row', // Aligner horizontalement
-    alignItems: 'center',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
     paddingHorizontal: 8,
   },
-  expoContainer: {
+  container: {  
+    width: CONTAINER_WIDTH, // Largeur fixe
     padding: 8,
     backgroundColor: '#444',
     borderRadius: 8,
-    marginHorizontal: 8, // Espacement horizontal entre les éléments
+    marginHorizontal: 8,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -123,13 +138,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   expoImage: {
-    height: width / 4 - 32,
+    width: CONTAINER_WIDTH - 40, // pour modifier la taille du logo
+    height: IMAGE_HEIGHT, // Hauteur fixe pour uniformiser les images
     marginBottom: 8,
     borderRadius: 10,
-  },
-  emptyText: {
-    color: '#fff',
-    textAlign: 'center',
-    marginTop: 40, // Ajout d'espace si la liste est vide
   },
 });
