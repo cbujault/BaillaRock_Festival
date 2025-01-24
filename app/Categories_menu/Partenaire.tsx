@@ -1,22 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, FlatList, Dimensions, Image, TouchableOpacity } from 'react-native';
-import PartModal from './popUp_Part'; 
+import { useNavigation } from '@react-navigation/native'; // Hook pour la navigation
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router'; // Hook pour la navigation entre les pages
+import PartModal from './popUp_Part';
 import { Partenaires } from '../../data/PartenaireData';
 
 const { width } = Dimensions.get('window');
 
 // Type pour un partenaire
 export type ListPartners = {
-  id: string; // Identifiant unique
-  name: string; // Nom du partenaire
-  genre: string; // Genre du partenaire
-  description: string; // Description du partenaire
-  image: number; // Représente une ressource d'image importée via require
+  id: string;
+  name: string;
+  genre: string;
+  description: string;
+  image: number;
 };
 
 export default function Partenaire() {
   const [selectedPart, setSelectedPart] = useState<ListPartners | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation(); // Hook pour la navigation
+  const router = useRouter(); // Hook pour la navigation entre les pages
+
+  // Charger et personnaliser l'en-tête dans useEffect
+  useEffect(() => {
+    navigation.setOptions({
+      title: 'Partenaires', // Titre de l'écran
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={30} color="'rgb(14, 93, 8)'" />
+          <Text style={styles.backText}>Retour</Text>
+        </TouchableOpacity>
+      ),
+      headerShown: true, // Afficher l'en-tête
+    });
+  }, [navigation, router]);
 
   const handlePartnerPress = (partner: ListPartners) => {
     setSelectedPart(partner);
@@ -47,7 +66,7 @@ export default function Partenaire() {
       <PartModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        part={selectedPart} // Corrigé pour être compatible
+        part={selectedPart}
       />
     </View>
   );
@@ -74,24 +93,34 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
     alignItems: 'center',
-    justifyContent: 'center', // Centrer l'image et le texte
+    justifyContent: 'center',
   },
   partnerName: {
-    fontSize: 14, // Légèrement réduit pour éviter les chevauchements
+    fontSize: 14,
     fontWeight: 'bold',
     marginTop: 8,
     color: '#fff',
     textAlign: 'center',
   },
   partnerImage: {
-    width: width / 2 - 64, // Ajustement pour un espacement propre
-    height: width / 3 - 64, // Proportionnelle pour éviter des déformations
-    marginBottom: 8, // Espacement entre l'image et le texte
-    borderRadius: 10, // Coins arrondis pour un meilleur design
+    width: width / 2 - 64,
+    height: width / 3 - 64,
+    marginBottom: 8,
+    borderRadius: 10,
   },
   emptyText: {
     color: '#fff',
     textAlign: 'center',
     marginTop: 20,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 10,
+  },
+  backText: {
+    marginLeft: 5,
+    color: 'black',
+    fontSize: 16,
   },
 });
