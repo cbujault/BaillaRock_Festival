@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, Dimensions, Image, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, Dimensions, Image, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import ExpoModal from '../popUp_Expo'; 
-import { Exposants } from '../../data/ExposantsData'; 
+import { Exposants, backgroundImage } from '../../data/ExposantsData'; // Importez ici
 import { Food } from '../../data/FoodData'; 
+import * as Font from 'expo-font'; // Importer le module expo-font
 
 const { width } = Dimensions.get('window');
 
@@ -28,83 +29,110 @@ export type ListFood = {
 export default function Village() {
   const [selectedExpo, setSelectedExpo] = useState<ListExpo | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [fontLoaded, setFontLoaded] = useState(false);
 
   const handleExpoPress = (expo: ListExpo) => {
     setSelectedExpo(expo);
     setModalVisible(true);
   };
 
+  // Charger la police
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        'Capsmall': require('../../assets/fonts/Capsmall.ttf'), // Spécifie le chemin de ta police
+      });
+      setFontLoaded(true);
+    };
+    loadFonts();
+  }, []);
+
+  // Afficher un écran vide ou un loader pendant le chargement des polices
+  if (!fontLoaded) {
+    return null; // Vous pouvez remplacer "null" par un indicateur de chargement
+  }
+
   return (
-    <View style={styles.screenContainer}>
-      {/* Section Exposants */}
-      <Text style={[styles.pageTitle, styles.expoTitle]}>Exposants</Text>
-      <ScrollView 
-        horizontal 
-        contentContainerStyle={styles.horizontalListContent}
-        showsHorizontalScrollIndicator={false}
-      >
-        {Exposants.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            style={styles.container}
-            onPress={() => handleExpoPress(item)}
-          >
-            <Image 
-              style={styles.expoImage} 
-              source={item.image} 
-              resizeMode="contain" 
-            />
-            <Text style={styles.expoName}>{item.name || 'Nom inconnu'}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+    <ImageBackground
+      source={backgroundImage} // Utilisation de la variable importée
+      style={styles.backgroundImage}
+      resizeMode="cover"
+    >
+      <View style={styles.screenContainer}>
+        {/* Section Exposants */}
+        <Text style={[styles.pageTitle, styles.expoTitle]}>Exposants</Text>
+        <ScrollView 
+          horizontal 
+          contentContainerStyle={styles.horizontalListContent}
+          showsHorizontalScrollIndicator={false}
+        >
+          {Exposants.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.container}
+              onPress={() => handleExpoPress(item)}
+            >
+              <Image 
+                style={styles.expoImage} 
+                source={item.image} 
+                resizeMode="contain" 
+              />
+              <Text style={styles.expoName}>{item.name || 'Nom inconnu'}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
 
-      {/* Section Food */}
-      <Text style={[styles.pageTitle, styles.foodTitle]}>Food</Text>
-      <ScrollView 
-        horizontal 
-        contentContainerStyle={styles.horizontalListContent}
-        showsHorizontalScrollIndicator={false}
-      >
-        {Food.map((ListFood) => ( 
-          <TouchableOpacity
-            key={ListFood.id} 
-            style={styles.container}
-            onPress={() => handleExpoPress(ListFood)} 
-          >
-            <Image 
-              style={styles.expoImage} 
-              source={ListFood.image} 
-              resizeMode="contain" 
-            />
-            <Text style={styles.expoName}>{ListFood.name || 'Nom inconnu'}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+        {/* Section Food */}
+        <Text style={[styles.pageTitle, styles.foodTitle]}>Food</Text>
+        <ScrollView 
+          horizontal 
+          contentContainerStyle={styles.horizontalListContent}
+          showsHorizontalScrollIndicator={false}
+        >
+          {Food.map((ListFood) => ( 
+            <TouchableOpacity
+              key={ListFood.id} 
+              style={styles.container}
+              onPress={() => handleExpoPress(ListFood)} 
+            >
+              <Image 
+                style={styles.expoImage} 
+                source={ListFood.image} 
+                resizeMode="contain" 
+              />
+              <Text style={styles.expoName}>{ListFood.name || 'Nom inconnu'}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
 
-      {/* Modal commun pour les deux sections */}
-      <ExpoModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        expo={selectedExpo}
-      />
-    </View>
+        {/* Modal commun pour les deux sections */}
+        <ExpoModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          expo={selectedExpo}
+        />
+      </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1, // S'assure que l'image de fond occupe tout l'écran
+  },
   screenContainer: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)', // Ajouter un fond semi-transparent pour améliorer la lisibilité
     padding: 8,
     paddingTop: 70,
   },
   pageTitle: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
     color: '#fff',
     textAlign: 'left',
     marginBottom: 15,
+    fontFamily: 'Capsmall', // Application de la police personnalisée
   },
   expoTitle: {
     marginTop: 90, // Ajout d’un espace pour descendre la section Exposants
