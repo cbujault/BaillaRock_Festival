@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Modal, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // Pour les icônes des réseaux sociaux
 import { ImageSourcePropType } from 'react-native';
+import { Linking } from 'react-native';
+
 
 export type Expo = {
   name: string; // Nom 

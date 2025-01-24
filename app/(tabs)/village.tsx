@@ -1,29 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Dimensions, Image, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
-import ExpoModal from '../popUp_Expo'; 
-import { Exposants, backgroundImage } from '../../data/ExposantsData'; // Importez ici
-import { Food } from '../../data/FoodData'; 
-import * as Font from 'expo-font'; // Importer le module expo-font
+import ExpoModal from '../popUp_Expo';
+import { Exposants, backgroundImage } from '../../data/ExposantsData';
+import { Food } from '../../data/FoodData';
+import * as Font from 'expo-font';
 
 const { width } = Dimensions.get('window');
-
-// Taille constante des containers
 const CONTAINER_WIDTH = width / 2 - 60;
 const IMAGE_HEIGHT = width / 2 - 60;
 
 export type ListExpo = {
-  id: string; 
+  id: string;
   name: string;
   genre: string;
   description: string;
   image: number;
+  facebook: string; 
 };
+
 export type ListFood = {
-  id: string; 
+  id: string;
   name: string;
   genre: string;
   description: string;
   image: number;
+  facebookLink?: string; // Champ optionnel pour le lien Facebook
 };
 
 export default function Village() {
@@ -36,47 +37,33 @@ export default function Village() {
     setModalVisible(true);
   };
 
-  // Charger la police
   useEffect(() => {
     const loadFonts = async () => {
       await Font.loadAsync({
-        'Capsmall': require('../../assets/fonts/Capsmall.ttf'), // Spécifie le chemin de ta police
+        'Capsmall': require('../../assets/fonts/Capsmall.ttf'),
       });
       setFontLoaded(true);
     };
     loadFonts();
   }, []);
 
-  // Afficher un écran vide ou un loader pendant le chargement des polices
   if (!fontLoaded) {
-    return null; // Vous pouvez remplacer "null" par un indicateur de chargement
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Chargement...</Text>
+      </View>
+    );
   }
 
   return (
-    <ImageBackground
-      source={backgroundImage} // Utilisation de la variable importée
-      style={styles.backgroundImage}
-      resizeMode="cover"
-    >
+    <ImageBackground source={backgroundImage} style={styles.backgroundImage} resizeMode="cover">
       <View style={styles.screenContainer}>
         {/* Section Exposants */}
         <Text style={[styles.pageTitle, styles.expoTitle]}>Exposants</Text>
-        <ScrollView 
-          horizontal 
-          contentContainerStyle={styles.horizontalListContent}
-          showsHorizontalScrollIndicator={false}
-        >
+        <ScrollView horizontal contentContainerStyle={styles.horizontalListContent} showsHorizontalScrollIndicator={false}>
           {Exposants.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              style={styles.container}
-              onPress={() => handleExpoPress(item)}
-            >
-              <Image 
-                style={styles.expoImage} 
-                source={item.image} 
-                resizeMode="contain" 
-              />
+            <TouchableOpacity key={item.id} style={styles.container} onPress={() => handleExpoPress(item)}>
+              <Image style={styles.expoImage} source={item.image} resizeMode="contain" />
               <Text style={styles.expoName}>{item.name || 'Nom inconnu'}</Text>
             </TouchableOpacity>
           ))}
@@ -84,33 +71,17 @@ export default function Village() {
 
         {/* Section Food */}
         <Text style={[styles.pageTitle, styles.foodTitle]}>Food</Text>
-        <ScrollView 
-          horizontal 
-          contentContainerStyle={styles.horizontalListContent}
-          showsHorizontalScrollIndicator={false}
-        >
-          {Food.map((ListFood) => ( 
-            <TouchableOpacity
-              key={ListFood.id} 
-              style={styles.container}
-              onPress={() => handleExpoPress(ListFood)} 
-            >
-              <Image 
-                style={styles.expoImage} 
-                source={ListFood.image} 
-                resizeMode="contain" 
-              />
-              <Text style={styles.expoName}>{ListFood.name || 'Nom inconnu'}</Text>
+        <ScrollView horizontal contentContainerStyle={styles.horizontalListContent} showsHorizontalScrollIndicator={false}>
+          {Food.map((item) => (
+            <TouchableOpacity key={item.id} style={styles.container} onPress={() => handleExpoPress(item)}>
+              <Image style={styles.expoImage} source={item.image} resizeMode="contain" />
+              <Text style={styles.expoName}>{item.name || 'Nom inconnu'}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
 
-        {/* Modal commun pour les deux sections */}
-        <ExpoModal
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          expo={selectedExpo}
-        />
+        {/* Modal commun */}
+        <ExpoModal visible={modalVisible} onClose={() => setModalVisible(false)} expo={selectedExpo} />
       </View>
     </ImageBackground>
   );
@@ -118,11 +89,11 @@ export default function Village() {
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    flex: 1, // S'assure que l'image de fond occupe tout l'écran
+    flex: 1,
   },
   screenContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)', // Ajouter un fond semi-transparent pour améliorer la lisibilité
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     padding: 8,
     paddingTop: 70,
   },
@@ -132,21 +103,21 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'left',
     marginBottom: 15,
-    fontFamily: 'Capsmall', // Application de la police personnalisée
+    fontFamily: 'Capsmall',
   },
   expoTitle: {
-    marginTop: 90, // Ajout d’un espace pour descendre la section Exposants
+    marginTop: 90,
   },
   foodTitle: {
-    marginTop: -20, // Réduction pour rapprocher la section Food
+    marginTop: -20,
   },
   horizontalListContent: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     paddingHorizontal: 8,
   },
-  container: {  
-    width: CONTAINER_WIDTH, // Largeur fixe
+  container: {
+    width: CONTAINER_WIDTH,
     padding: 8,
     backgroundColor: '#444',
     borderRadius: 8,
@@ -166,9 +137,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   expoImage: {
-    width: CONTAINER_WIDTH - 40, // pour modifier la taille du logo
-    height: IMAGE_HEIGHT, // Hauteur fixe pour uniformiser les images
+    width: CONTAINER_WIDTH - 40,
+    height: IMAGE_HEIGHT,
     marginBottom: 8,
     borderRadius: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  loadingText: {
+    color: 'white',
+    fontSize: 20,
   },
 });
