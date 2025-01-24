@@ -69,7 +69,7 @@ export const dayOneGroups: Group[] = [
     endTime: '23:00', 
     image: require('../assets/images/Image_prog/logo_satanicsurfers.png'), 
     bannerImage: require('../assets/images/Image_prog/Affiche_SatanicSurfers.jpg'), 
-    description: 'Légendes du Skate Punk suédois, prêts à clore cette soirée avec énergie !',
+    description: 'pas de description',
     socialLinks: [
       { name: "facebook", url: "https://www.facebook.com/satanic.surfers.official" },
       { name: "link", url: "https://satanicsurfers.bandcamp.com/?fbclid=IwY2xjawIASh9leHRuA2FlbQIxMAABHR-NkjINH15KIAZPypxQpIII9pDeAifco9JmII6Wj-to9cUfso-d09-2cA_aem_vufVR8v6UUsCzpzfraBwGA" },
