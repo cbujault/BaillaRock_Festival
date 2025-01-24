@@ -1,14 +1,7 @@
 import * as React from 'react';
-import { Modal, View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'; // Pour les icônes des réseaux sociaux
-import { ImageSourcePropType } from 'react-native';
-
-type Group = {
-  name: string;
-  genre: string;
-  image: ImageSourcePropType;
-  description: string;
-};
+import { Modal, View, Text, ImageBackground, StyleSheet, TouchableOpacity, SafeAreaView, Linking } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { Group, SocialLink } from './(tabs)/Programmation';
 
 export type GroupModalProps = {
   visible: boolean;
@@ -16,38 +9,65 @@ export type GroupModalProps = {
   group: Group | null;
 };
 
+// Définir une map des icônes pour les réseaux sociaux
+const socialIconMap: { [key: string]: string } = {
+  facebook: "facebook",
+  twitter: "twitter",
+  instagram: "instagram",
+  youtube: "youtube",
+  linkedin: "linkedin",
+};
+
+// Fonction pour récupérer l'icône d'un réseau social
+const getSocialIcon = (name: string): string => {
+  return socialIconMap[name] || "link"; // Icône générique pour les liens non mappés
+};
 
 export default function GroupModal({ visible, onClose, group }: GroupModalProps) {
   if (!group) return null;
 
+  // Fonction pour ouvrir un lien
+  const openLink = (url: string) => {
+    Linking.openURL(url).catch(() => {
+      alert("Impossible d'ouvrir le lien.");
+    });
+  };
+
   return (
     <Modal animationType="slide" transparent={true} visible={visible}>
       <View style={styles.modalContainer}>
-        {/* Icône de fermeture en haut à droite */}
+        {/* Icône de fermeture */}
         <SafeAreaView>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <FontAwesome name="times" size={30} color="green" />
           </TouchableOpacity>
         </SafeAreaView>
+
+        {/* Bannière avec image de fond */}
         <View style={styles.banner}>
-          <View style={styles.textContainer}>
-            <Text style={styles.groupName}>{group.name}</Text>
-            <Text style={styles.groupGenre}>{group.genre}</Text>
-          </View>
-          <Image source={group.image} style={styles.groupImage} />
+          <ImageBackground source={group.bannerImage} style={styles.bannerBackground} resizeMode="cover">
+            <View style={styles.textContainer}>
+              <Text style={styles.groupName}>{group.name}</Text>
+              <Text style={styles.groupGenre}>{group.genre}</Text>
+            </View>
+          </ImageBackground>
         </View>
+
         <View style={styles.content}>
           <Text style={styles.description}>{group.description}</Text>
+
+          {/* Icônes des réseaux sociaux dynamiques */}
           <View style={styles.socialIcons}>
-            <TouchableOpacity>
-              <FontAwesome name="facebook" size={30} color="#3b5998" />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <FontAwesome name="twitter" size={30} color="#1DA1F2" />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <FontAwesome name="instagram" size={30} color="#E1306C" />
-            </TouchableOpacity>
+            {group.socialLinks.map((social, index) => (
+              <TouchableOpacity key={index} onPress={() => openLink(social.url)}>
+                <FontAwesome 
+                  name={getSocialIcon(social.name)} 
+                  size={30} 
+                  color="#fff" 
+                  style={styles.socialIcon} 
+                />
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
       </View>
@@ -61,28 +81,27 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(40, 40, 40)',
   },
   banner: {
-    height: '25%',
-    backgroundColor: '#f2f2f2',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
+    height: '30%',
+  },
+  bannerBackground: {
+    flex: 1,
+    justifyContent: 'flex-end',
   },
   textContainer: {
-    flex: 1,
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignSelf: 'flex-start',
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
   },
   groupName: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: 'white',
   },
   groupGenre: {
-    fontSize: 18,
-    color: 'gray',
-  },
-  groupImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-    marginLeft: 10,
+    fontSize: 17,
+    color: 'lightgray',
   },
   content: {
     flex: 1,
@@ -92,16 +111,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 20,
     color: 'white',
+    textAlign: 'justify',
   },
   socialIcons: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 20,
   },
+  socialIcon: {
+    marginHorizontal: 10,
+  },
   closeButton: {
     position: 'absolute',
     top: 10,
     right: 10,
-    zIndex: 1,
+    zIndex: 10,
+    padding: 5,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 15,
   },
 });
