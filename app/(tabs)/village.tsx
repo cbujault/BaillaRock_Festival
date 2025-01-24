@@ -15,7 +15,10 @@ export type ListExpo = {
   genre: string;
   description: string;
   image: number;
-  facebook: string; 
+  facebookLink?: string;
+  instagramLink?: string; 
+  Link? : string,
+  websiteLink?: string,
 };
 
 export type ListFood = {
@@ -24,7 +27,10 @@ export type ListFood = {
   genre: string;
   description: string;
   image: number;
-  facebookLink?: string; // Champ optionnel pour le lien Facebook
+  facebookLink?: string; 
+  instagramLink?: string; 
+  Link? : string,
+  websiteLink?: string,
 };
 
 export default function Village() {
