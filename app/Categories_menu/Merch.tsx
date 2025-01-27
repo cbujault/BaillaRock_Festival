@@ -11,35 +11,28 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native'; // Hook pour la navigation
-import { useRouter } from 'expo-router'; // Hook pour la navigation entre les pages
-
-// Import des images
-const BackgroundImage = require('../../assets/images/Merch/Affiche_drag.png');
-const TopImage = require('../../assets/images/Merch/sweat.png');
-const LogoImage = require('../../assets/images/Merch/logo.png');
-const TeeshirtImage = require('../../assets/images/Merch/teeshirt_fest.png');
-const PartImage = require('../../assets/images/Merch/part.png');
+import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import MerchConfig from '../../config/Config_Merch';
 
 const { width, height } = Dimensions.get('window');
 
 const Merch: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const navigation = useNavigation(); // Hook pour la navigation
-  const router = useRouter(); // Hook pour la navigation entre les pages
+  const navigation = useNavigation();
+  const router = useRouter();
 
-  // Charger et personnaliser l'en-tête dans useEffect
   useEffect(() => {
     navigation.setOptions({
-      title: 'Merchandising', // Titre de l'écran
+      title: MerchConfig.texts.title,
       headerLeft: () => (
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <FontAwesome name="arrow-left" size={30} color="'rgb(14, 93, 8)'" />
-          <Text style={styles.backText}>Retour</Text>
+          <FontAwesome name="arrow-left" size={30} color={MerchConfig.colors.backButton} />
+          <Text style={styles.backText}>{MerchConfig.texts.backText}</Text>
         </TouchableOpacity>
       ),
-      headerShown: true, // Afficher l'en-tête
+      headerShown: true,
     });
   }, [navigation, router]);
 
@@ -55,46 +48,33 @@ const Merch: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground
-        source={BackgroundImage}
-        style={styles.backgroundImage}
-        imageStyle={{ resizeMode: 'cover' }}
-      >
+      <ImageBackground source={MerchConfig.images.background} style={styles.backgroundImage}>
         <View style={styles.overlay} />
       </ImageBackground>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.title}></Text>
+        <Text style={styles.title}>{MerchConfig.texts.title}</Text>
 
-        <TouchableOpacity onPress={() => handleImagePress(TopImage)}>
-          <Image source={TopImage} style={styles.topImage} />
+        <TouchableOpacity onPress={() => handleImagePress(MerchConfig.images.top)}>
+          <Image source={MerchConfig.images.top} style={styles.topImage} />
         </TouchableOpacity>
 
-        <Image source={LogoImage} style={styles.logoImage} />
+        <Image source={MerchConfig.images.logo} style={styles.logoImage} />
 
-        <TouchableOpacity onPress={() => handleImagePress(TeeshirtImage)}>
-          <Image source={TeeshirtImage} style={styles.teeshirtImage} />
+        <TouchableOpacity onPress={() => handleImagePress(MerchConfig.images.teeshirt)}>
+          <Image source={MerchConfig.images.teeshirt} style={styles.teeshirtImage} />
         </TouchableOpacity>
 
-        <Image source={LogoImage} style={styles.logoImage} />
-
-        <Image source={PartImage} style={styles.partImage} />
+        <Image source={MerchConfig.images.logo} style={styles.logoImage} />
+        <Image source={MerchConfig.images.part} style={styles.partImage} />
       </ScrollView>
 
-      <Modal
-        visible={modalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={closeModal}
-      >
+      <Modal visible={modalVisible} transparent animationType="fade" onRequestClose={closeModal}>
         <View style={styles.modalContainer}>
           <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-            <FontAwesome name="times" size={30} color="rgb(14, 93, 8)" />
+            <FontAwesome name="times" size={30} color={MerchConfig.colors.backButton} />
           </TouchableOpacity>
-
-          {selectedImage && (
-            <Image source={selectedImage} style={styles.zoomedImage} />
-          )}
+          {selectedImage && <Image source={selectedImage} style={styles.zoomedImage} />}
         </View>
       </Modal>
     </View>
