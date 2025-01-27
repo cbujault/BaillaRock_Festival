@@ -36,6 +36,7 @@ export default function Partenaire() {
       headerShown: true, // Afficher l'en-tête
     });
   }, [navigation, router]);
+  
 
   const handlePartnerPress = (partner: ListPartners) => {
     setSelectedPart(partner);
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
   },
   backText: {
     marginLeft: 5,
-    color: 'black',
-    fontSize: 16,
+    color: 'rgb(14, 93, 8)',
+    fontSize: 20,
   },
 });

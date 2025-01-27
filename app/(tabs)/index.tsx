@@ -15,6 +15,14 @@ export default function HomeScreen() {
     minutes: 0,
     seconds: 0,
   });
+
+  const labels = {
+    days: 'Jours',
+    hours: 'Heures',
+    minutes: 'Minutes',
+    seconds: 'Secondes'
+  };
+
   const [timeExpired, setTimeExpired] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -69,29 +77,37 @@ export default function HomeScreen() {
   };
 
   // Fonction pour la redirection vers la page d'exploration
+
   const navigateToExplore = () => {
     router.push('/(tabs)/explore');
   };
-
-    // Charger la police 'Capsmall'
+    const [fontLoaded, setFontLoaded] = useState(false);
+  
     useEffect(() => {
       const loadFonts = async () => {
-        await Font.loadAsync({
-          'Capsmall': require('../../assets/fonts/Capsmall.ttf'),
-        });
-        setFontLoaded(true); // Mettre à jour l'état une fois la police chargée
+        try {
+          await Font.loadAsync({
+            'Capsmall': require('../../assets/fonts/Capsmall.ttf'),
+            'Capsmall_clean': require('../../assets/fonts/Capsmall_clean.ttf'),
+          });
+          setFontLoaded(true);
+        } catch (error) {
+          console.error("Erreur lors du chargement des polices :", error);
+        }
       };
+  
       loadFonts();
     }, []);
-
-    // Si la police n'est pas chargée, afficher un écran de chargement
-    if (!setFontLoaded) {
+  
+    if (!fontLoaded) {
       return (
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>Chargement...</Text>
         </View>
       );
     }
+
+  
 
   // Rendu principal
   return (
@@ -128,16 +144,18 @@ export default function HomeScreen() {
             </>
           ) : (
             <>
+            
               <View style={styles.countdownContainer}>
                 <View style={styles.countdownRow}>
-                  {['days', 'hours', 'minutes', 'seconds'].map((unit) => (
+                  {Object.keys(labels).map((unit) => (
                     <View key={unit} style={styles.countdownItem}>
                       <Text style={styles.countdownNumber}>{timeLeft[unit]}</Text>
-                      <Text style={styles.countdownLabel}>{unit.charAt(0).toUpperCase() + unit.slice(1)}</Text>
+                      <Text style={styles.countdownLabel}>{labels[unit]}</Text> {/* Affichage correct en français */}
                     </View>
                   ))}
                 </View>
               </View>
+
               <Text style={styles.addressText}>{homeConfig.location}</Text>
               <TouchableOpacity
                 style={styles.button}
@@ -267,23 +285,28 @@ const styles = StyleSheet.create({
   countdownContainer: {
     marginVertical: 20,
     alignItems: 'center',
+    fontFamily: 'Capsmall_clean',
   },
   countdownRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '80%',
+    fontFamily: 'Capsmall_clean',
   },
   countdownItem: {
     alignItems: 'center',
+    fontFamily: 'Capsmall_clean',
   },
   countdownNumber: {
-    fontSize: 40,
+    fontSize: 37,
     fontWeight: 'bold',
     color: '#fff', // Couleur blanche pour le texte
+    fontFamily: 'People',
   },
   countdownLabel: {
-    fontSize: 14,
+    fontSize: 17,
     fontWeight: 'normal',
+    fontFamily: 'People',
     color: '#ddd', // Couleur douce pour les labels
   },
   button: {
