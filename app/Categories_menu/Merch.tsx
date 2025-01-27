@@ -4,6 +4,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'; // Hook pour la navigation
 import { useRouter } from 'expo-router'; // Hook pour la navigation entre les pages
 import  MerchConfig  from '../../config/Config_Merch';
+import { Ionicons } from '@expo/vector-icons';
+
 
 // Import des images
 const BackgroundImage = require('../../assets/images/Merch/Affiche_drag.png');
@@ -22,14 +24,14 @@ const Merch: React.FC = () => {
 
   useEffect(() => {
     navigation.setOptions({
-      title: MerchConfig.texts.title,
+      title: 'Merchandising', // Titre personnalisé
       headerLeft: () => (
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <FontAwesome name="arrow-left" size={30} color="'rgb(14, 93, 8)'" />
+          <Ionicons name="arrow-back" size={30} color="#0E5D08" />
           <Text style={styles.backText}>Retour</Text>
         </TouchableOpacity>
       ),
-      headerShown: true,
+      headerShown: true, // Afficher l'en-tête
     });
   }, [navigation, router]);
 
@@ -176,7 +178,7 @@ const styles = StyleSheet.create({
   },
   backText: {
     marginLeft: 5,
-    color: 'rgb(14, 93, 8)',
+    color: '#0E5D08',
     fontSize: 20,
   },
 });
