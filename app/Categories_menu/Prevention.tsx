@@ -64,7 +64,7 @@ export default function Prevention() {
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: '#000', // Fond noir pour un design moderne et contrasté
+    backgroundColor: '#121212', // Fond noir pour un design moderne et contrasté
     padding: 16,
   },
   scrollContainer: {
