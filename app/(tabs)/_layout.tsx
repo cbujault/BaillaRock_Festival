@@ -15,14 +15,11 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
-
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    // Supprimer le SafeAreaView ici
     <View style={styles.container}>  {/* Utiliser View à la place */}
-      {/* Barre d'état non translucide avec un arrière-plan */}
       <StatusBar
         translucent={false}
         backgroundColor={colorScheme === 'dark' ? '#000' : '#fff'}
@@ -36,7 +33,7 @@ export default function TabLayout() {
           tabBarButton: HapticTab,
           tabBarBackground: TabBarBackground,
           tabBarStyle: {
-            position: 'relative',  // Changer de 'absolute' à 'relative'
+            position: 'relative',
             height: 80,
             bottom: 0,
             left: 0,
@@ -70,12 +67,12 @@ export default function TabLayout() {
         <Tabs.Screen
           name="index"
           options={{
-            title: 'Home',
+            title: 'Accueil',
             tabBarButton: ({ onPress }) => (
               <View style={styles.centerContainer}>
                 <TouchableOpacity style={styles.homeButton} onPress={onPress}>
                   <Image
-                    source={require('@/assets/images/Museau.png')}
+                    source={require('@/assets/images/Museau.png')} // Remplace par ton image
                     style={styles.homeIcon}
                   />
                 </TouchableOpacity>
@@ -104,7 +101,7 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-    </View> 
+    </View>
   );
 }
 
@@ -138,6 +135,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 35,
-    resizeMode: 'cover',
+    resizeMode: 'cover', // Garde l'image dans un format correct
   },
 });
