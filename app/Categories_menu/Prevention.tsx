@@ -52,7 +52,7 @@ export default function Prevention() {
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: '#000',
     padding: 16,
   },
   text: {

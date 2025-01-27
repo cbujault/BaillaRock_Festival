@@ -29,13 +29,14 @@ export default function Partenaire() {
       title: 'Partenaires', // Titre de l'écran
       headerLeft: () => (
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={30} color="'rgb(14, 93, 8)'" />
+          <Ionicons name="arrow-back" size={30} color="rgb(14, 93, 8)" /> {/* Correction ici */}
           <Text style={styles.backText}>Retour</Text>
         </TouchableOpacity>
       ),
       headerShown: true, // Afficher l'en-tête
     });
   }, [navigation, router]);
+  
 
   const handlePartnerPress = (partner: ListPartners) => {
     setSelectedPart(partner);
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
   },
   backText: {
     marginLeft: 5,
-    color: 'black',
-    fontSize: 16,
+    color: 'rgb(14, 93, 8)',
+    fontSize: 20,
   },
 });
