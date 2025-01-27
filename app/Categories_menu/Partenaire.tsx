@@ -29,7 +29,7 @@ export default function Partenaire() {
       title: 'Partenaires', // Titre de l'écran
       headerLeft: () => (
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={30} color="'rgb(14, 93, 8)'" />
+          <Ionicons name="arrow-back" size={30} color="rgb(14, 93, 8)" />
           <Text style={styles.backText}>Retour</Text>
         </TouchableOpacity>
       ),
