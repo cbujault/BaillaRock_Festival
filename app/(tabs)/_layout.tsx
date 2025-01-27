@@ -72,7 +72,7 @@ export default function TabLayout() {
               <View style={styles.centerContainer}>
                 <TouchableOpacity style={styles.homeButton} onPress={onPress}>
                   <Image
-                    source={require('@/assets/images/Museau.png')} // Remplace par ton image
+                    source={require('@/assets/images/Museau.png')}
                     style={styles.homeIcon}
                   />
                 </TouchableOpacity>

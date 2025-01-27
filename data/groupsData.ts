@@ -147,7 +147,7 @@ export const dayTwoGroups: Group[] = [
     endTime: '20:45', 
     image: require('../assets/images/Image_prog/logo_noturningback.png'), 
     bannerImage: require('../assets/images/Image_prog/affiche_noturningback.jpg'), 
-    description: 'pas de description pour ce groupe',
+    description: 'pas encore de description pour ce groupe',
     socialLinks: [
       { name: "facebook", url: "https://www.facebook.com/NoTurningBackHC" },
       { name: "spotify", url: "https://open.spotify.com/intl-fr/album/729WkK6B60buewwoIShyvK?si=aOdEWZVJTuO3xZ-a9cUmRg&nd=1&dlsi=96fade1912304a1c" },
