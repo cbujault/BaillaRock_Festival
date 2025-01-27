@@ -1,84 +1,71 @@
 import * as React from 'react';
-import { Modal, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Modal, View, Text, StyleSheet, TouchableOpacity, ImageBackground, SafeAreaView, Linking} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { ImageSourcePropType } from 'react-native';
-import { Linking } from 'react-native';
+import { ListFood, ListExpo, SocialLink } from './(tabs)/village';
 
-export type Expo = {
-  name: string;
-  genre: string;
-  image: ImageSourcePropType;
-  description: string;
-  facebookLink?: string;
-  instagramLink?: string;
-  websiteLink?: string;
-};
-
-export type ExpoModalProps = {
+export type FoodExpoModalProps = {
   visible: boolean;
   onClose: () => void;
-  expo: Expo | null;
+  item: ListFood | ListExpo | null; // Peut être un Food ou un Expo
 };
 
-export default function ExpoModal({ visible, onClose, expo }: ExpoModalProps) {
-  if (!expo) return null;
+const socialIconMap: { [key: string]: keyof typeof FontAwesome.glyphMap } = {
+  facebook: "facebook",
+  instagram: "instagram",
+  website: "link", // Modifier ici pour faire correspondre le bon nom d'icône
+};
 
-  const handleOpenLink = async (url?: string) => {
-    if (url) {
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
-        Linking.openURL(url);
-      } else {
-        console.warn('Ce lien n\'est pas supporté :', url);
-      }
-    } else {
-      console.warn('Aucun lien disponible.');
-    }
+const getSocialIcon = (name: string): keyof typeof FontAwesome.glyphMap => {
+  return socialIconMap[name] || "link"; // Valeur par défaut si rien n'est trouvé
+};
+
+export default function FoodExpoModal({ visible, onClose, item }: FoodExpoModalProps) {
+  if (!item) return null;
+
+  // Fonction pour ouvrir un lien
+  const openLink = (url: string) => {
+    Linking.openURL(url).catch(() => {
+      alert("Impossible d'ouvrir le lien.");
+    });
   };
 
   return (
     <Modal animationType="slide" transparent={true} visible={visible}>
       <View style={styles.modalContainer}>
+        {/* Icône de fermeture */}
+        <SafeAreaView>
+          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <FontAwesome name="times" size={30} color="green" />
+          </TouchableOpacity>
+        </SafeAreaView>
+
+        {/* Bannière avec image de fond */}
         <View style={styles.banner}>
-          <View style={styles.textContainer}>
-            <Text style={styles.expoName}>{expo.name}</Text>
-            <Text style={styles.expoGenre}>{expo.genre}</Text>
-          </View>
-          <Image source={expo.image} style={styles.expoImage} resizeMode="contain" />
+          <ImageBackground source={item.imageBG} style={styles.bannerBackground} resizeMode="cover">
+            <View style={styles.textContainer}>
+              <Text style={styles.itemName}>{item.name}</Text>
+              <Text style={styles.itemGenre}>{item.genre}</Text>
+            </View>
+          </ImageBackground>
         </View>
 
         <View style={styles.content}>
-          <Text style={styles.description}>{expo.description}</Text>
-          <View style={styles.socialIcons}>
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={() => handleOpenLink(expo.facebookLink)}
-            >
-              <FontAwesome name="facebook" size={40} color="#fff" />
-            </TouchableOpacity>
-            {expo.instagramLink && (
-              <TouchableOpacity
-                style={styles.iconButton}
-                onPress={() => handleOpenLink(expo.instagramLink)}
-              >
-                <FontAwesome name="instagram" size={40} color="#fff" />
-              </TouchableOpacity>
-            )}
-            {expo.websiteLink && (
-              <TouchableOpacity
-                style={styles.iconButton}
-                onPress={() => handleOpenLink(expo.websiteLink)}
-              >
-                {/* Icône simple pour le web */}
-                <FontAwesome name="globe" size={40} color="#fff" />
-              </TouchableOpacity>
-            )}
+          <Text style={styles.description}>{item.description}</Text>
+
+            {/* Icônes des réseaux sociaux dynamiques */}
+            <View style={styles.socialIcons}>
+              {item.socialLinks.map((social, index) => (
+                <TouchableOpacity key={index} onPress={() => openLink(social.url)}>
+                  <FontAwesome 
+                    name={getSocialIcon(social.name)} 
+                    size={30} 
+                    color="#fff" 
+                    style={styles.socialIcon} 
+                  />
+                </TouchableOpacity>
+              ))}
           </View>
         </View>
-
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <FontAwesome name="times" size={30} />
-        </TouchableOpacity>
       </View>
     </Modal>
   );
@@ -87,66 +74,58 @@ export default function ExpoModal({ visible, onClose, expo }: ExpoModalProps) {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-  },
-  banner: {
-    height: '25%',
-    backgroundColor: '#d9d9d9',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    backgroundColor: 'rgb(40, 40, 40)',
     position: 'relative',
   },
+  banner: {
+    height: '30%',
+    position: 'relative',
+  },
+  bannerBackground: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
   textContainer: {
-    position: 'absolute', 
-    bottom: 10,          
-    left: 20,            
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    alignSelf: 'flex-start',
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
   },
-  expoName: {
-    fontSize: 19,
+  itemName: {
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#000',
+    color: 'white',
   },
-  expoGenre: {
-    fontSize: 15,
-    color: 'gray',
-    marginTop: 4,
-  },
-  expoImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginRight: 20, // Décaler le logo légèrement vers la gauche
+  itemGenre: {
+    fontSize: 18,
+    color: 'white',
   },
   content: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#333333',
   },
   description: {
     fontSize: 16,
     marginBottom: 20,
-    color: '#fff',
+    color: 'white',
     textAlign: 'justify',
   },
   socialIcons: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-around',
     marginTop: 20,
   },
-  iconButton: {
-    padding: 20,
+  socialIcon: {
+    marginHorizontal: 10,
   },
   closeButton: {
     position: 'absolute',
-    top: 30,
-    right: 10,
-    zIndex: 10,
-    padding: 5,
+    top: 20,
+    right: 20,
+    zIndex: 999,
+    padding: 10,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 15,
+    borderRadius: 20,
   },
 });
-
-

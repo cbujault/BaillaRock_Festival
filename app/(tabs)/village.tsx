@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Dimensions, Image, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import ExpoModal from '../popUp_Expo';
-import { Exposants, backgroundImage } from '../../data/ExposantsData';
+import { backgroundImage, Exposants } from '../../data/ExposantsData';
 import { Food } from '../../data/FoodData';
 import * as Font from 'expo-font';
 
@@ -15,10 +15,13 @@ export type ListExpo = {
   genre: string;
   description: string;
   image: number;
-  facebookLink?: string;
-  instagramLink?: string; 
-  Link? : string,
-  websiteLink?: string,
+  imageBG: number;
+  socialLinks: SocialLink[];
+};
+
+export type SocialLink = {
+  name: string;
+  url: string;
 };
 
 export type ListFood = {
@@ -27,18 +30,16 @@ export type ListFood = {
   genre: string;
   description: string;
   image: number;
-  facebookLink?: string; 
-  instagramLink?: string; 
-  Link? : string,
-  websiteLink?: string,
+  imageBG: number;
+  socialLinks: SocialLink[];
 };
 
 export default function Village() {
-  const [selectedExpo, setSelectedExpo] = useState<ListExpo | null>(null);
+  const [selectedExpo, setSelectedExpo] = useState<ListExpo | ListFood | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [fontLoaded, setFontLoaded] = useState(false);
 
-  const handleExpoPress = (expo: ListExpo) => {
+  const handleExpoPress = (expo: ListExpo | ListFood) => {
     setSelectedExpo(expo);
     setModalVisible(true);
   };
@@ -87,7 +88,7 @@ export default function Village() {
         </ScrollView>
 
         {/* Modal commun */}
-        <ExpoModal visible={modalVisible} onClose={() => setModalVisible(false)} expo={selectedExpo} />
+        <ExpoModal visible={modalVisible} onClose={() => setModalVisible(false)} item={selectedExpo} />
       </View>
     </ImageBackground>
   );
