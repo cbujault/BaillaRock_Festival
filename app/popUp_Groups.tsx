@@ -9,8 +9,7 @@ export type GroupModalProps = {
   group: Group | null;
 };
 
-// Définir une map des icônes pour les réseaux sociaux
-const socialIconMap: { [key: string]: string } = {
+const socialIconMap: { [key: string]: keyof typeof FontAwesome.glyphMap } = {
   facebook: "facebook",
   twitter: "twitter",
   instagram: "instagram",
@@ -18,9 +17,8 @@ const socialIconMap: { [key: string]: string } = {
   linkedin: "linkedin",
 };
 
-// Fonction pour récupérer l'icône d'un réseau social
-const getSocialIcon = (name: string): string => {
-  return socialIconMap[name] || "link"; // Icône générique pour les liens non mappés
+const getSocialIcon = (name: string): keyof typeof FontAwesome.glyphMap => {
+  return socialIconMap[name] || "link";
 };
 
 export default function GroupModal({ visible, onClose, group }: GroupModalProps) {
