@@ -1,30 +1,44 @@
 import * as React from 'react';
 import { Modal, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'; // Pour les icônes des réseaux sociaux
+import { FontAwesome } from '@expo/vector-icons';
 import { ImageSourcePropType } from 'react-native';
 import { Linking } from 'react-native';
 
-
 export type Expo = {
-  name: string; // Nom 
-  genre: string; // Genre 
-  image: ImageSourcePropType; // Source de l'image (require)
-  description: string; // Description détaillée
+  name: string;
+  genre: string;
+  image: ImageSourcePropType;
+  description: string;
+  facebookLink?: string;
+  instagramLink?: string;
+  websiteLink?: string;
 };
 
 export type ExpoModalProps = {
-  visible: boolean; // Afficher ou non le modal
-  onClose: () => void; // Fonction pour fermer le modal
-  expo: Expo | null; // Exposant sélectionné ou null si aucun
+  visible: boolean;
+  onClose: () => void;
+  expo: Expo | null;
 };
 
 export default function ExpoModal({ visible, onClose, expo }: ExpoModalProps) {
-  if (!expo) return null; // Ne pas afficher le modal si aucun exposant n'est sélectionné
+  if (!expo) return null;
+
+  const handleOpenLink = async (url?: string) => {
+    if (url) {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        Linking.openURL(url);
+      } else {
+        console.warn('Ce lien n\'est pas supporté :', url);
+      }
+    } else {
+      console.warn('Aucun lien disponible.');
+    }
+  };
 
   return (
     <Modal animationType="slide" transparent={true} visible={visible}>
       <View style={styles.modalContainer}>
-        {/* Bannière supérieure avec l'image et le texte */}
         <View style={styles.banner}>
           <View style={styles.textContainer}>
             <Text style={styles.expoName}>{expo.name}</Text>
@@ -33,24 +47,35 @@ export default function ExpoModal({ visible, onClose, expo }: ExpoModalProps) {
           <Image source={expo.image} style={styles.expoImage} resizeMode="contain" />
         </View>
 
-        {/* Contenu principal */}
         <View style={styles.content}>
           <Text style={styles.description}>{expo.description}</Text>
-          {/* Icônes des réseaux sociaux */}
           <View style={styles.socialIcons}>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => handleOpenLink(expo.facebookLink)}
+            >
               <FontAwesome name="facebook" size={40} color="#3b5998" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
-              <FontAwesome name="twitter" size={40} color="#1DA1F2" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
-              <FontAwesome name="instagram" size={40} color="#E1306C" />
-            </TouchableOpacity>
+            {expo.instagramLink && (
+              <TouchableOpacity
+                style={styles.iconButton}
+                onPress={() => handleOpenLink(expo.instagramLink)}
+              >
+                <FontAwesome name="instagram" size={40} color="#E1306C" />
+              </TouchableOpacity>
+            )}
+            {expo.websiteLink && (
+              <TouchableOpacity
+                style={styles.iconButton}
+                onPress={() => handleOpenLink(expo.websiteLink)}
+              >
+                {/* Icône simple pour le web */}
+                <FontAwesome name="globe" size={40} color="#000" />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
-        {/* Icône de fermeture */}
         <TouchableOpacity style={styles.closeButton} onPress={onClose}>
           <FontAwesome name="times" size={30} />
         </TouchableOpacity>
@@ -62,7 +87,7 @@ export default function ExpoModal({ visible, onClose, expo }: ExpoModalProps) {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.9)', // Ombre d'arrière-plan pour le modal
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
   },
   banner: {
     height: '25%',
@@ -84,10 +109,10 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   expoImage: {
-    width: 130, // Taille de l'image
+    width: 130,
     height: 120,
     borderRadius: 30,
-    marginLeft: -60, // Décalage de l'image vers la gauche (valeur négative)
+    marginLeft: -60,
   },
   content: {
     flex: 1,
@@ -102,16 +127,16 @@ const styles = StyleSheet.create({
   },
   socialIcons: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly', // Espacement égal entre les icônes
+    justifyContent: 'space-evenly',
     marginTop: 20,
   },
   iconButton: {
-    padding: 20, // Plus de padding autour des icônes pour les rendre plus cliquables
+    padding: 20,
   },
   closeButton: {
     position: 'absolute',
-    top: 60, 
-    right: 15, // Décalage depuis la droite
-    zIndex: 40, // S'assurer que la croix soit au-dessus des autres éléments
+    top: 60,
+    right: 15,
+    zIndex: 40,
   },
 });

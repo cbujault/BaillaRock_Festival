@@ -9,6 +9,8 @@ export const Food: ListFood[] = [
       'Traiteurs pour professionnels ou particulier, repas de famille, pour entreprise, anniversaire et mariage.\nFaites-nous confiance pour faire de votre événement un moment mémorable !',
     image: require('../assets/images/Logo_FoodT/Logo_nessno.png'),
     facebookLink: 'https://www.facebook.com/nessetnono',
+    instagramLink: 'https://www.instagram.com/nessetnono/',
+    websiteLink: 'https://www.ness-et-nono-traiteur.com/',
   },
   {
     id: '2',
@@ -18,5 +20,7 @@ export const Food: ListFood[] = [
       'Depuis plusieurs années la cuisine de comptoir vous offre une cuisine simple, élaborée à partir de produits frais et locaux.\nTout est fait ici pour créer un endroit convivial, autour de vrais produits d’artisans, une cuisine aux goûts de tous, que vous soyez végétarien, amateur de belles viandes, de poissons fins ou de burgers bien faits ! Vive le Fait Maison !',
     image: require('../assets/images/Logo_FoodT/logo_cuisinecomptoir.png'),
     facebookLink: 'https://www.facebook.com/lacuisinedecomptoir',
+    instagramLink: 'https://www.instagram.com/lacuisinedecomptoir86/',
+    websiteLink: 'http://www.la-cuisine-de-comptoir.eatbu.com/',
   },
 ];
