@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  View,
-  ImageBackground,
-  Image,
-  Text,
-  Dimensions,
-  ScrollView,
-  Modal,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, View, ImageBackground, Image, Text, Dimensions, ScrollView, Modal, TouchableOpacity} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { useRouter } from 'expo-router';
-import MerchConfig from '../../config/Config_Merch';
+import { useNavigation } from '@react-navigation/native'; // Hook pour la navigation
+import { useRouter } from 'expo-router'; // Hook pour la navigation entre les pages
+
+// Import des images
+const BackgroundImage = require('../../assets/images/Merch/Affiche_drag.png');
+const TopImage = require('../../assets/images/Merch/sweat.png');
+const LogoImage = require('../../assets/images/Merch/logo.png');
+const TeeshirtImage = require('../../assets/images/Merch/teeshirt_fest.png');
+const PartImage = require('../../assets/images/Merch/part.png');
 
 const { width, height } = Dimensions.get('window');
 
@@ -28,8 +24,8 @@ const Merch: React.FC = () => {
       title: MerchConfig.texts.title,
       headerLeft: () => (
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <FontAwesome name="arrow-left" size={30} color={MerchConfig.colors.backButton} />
-          <Text style={styles.backText}>{MerchConfig.texts.backText}</Text>
+          <FontAwesome name="arrow-left" size={30} color="'rgb(14, 93, 8)'" />
+          <Text style={styles.backText}>Retour</Text>
         </TouchableOpacity>
       ),
       headerShown: true,
