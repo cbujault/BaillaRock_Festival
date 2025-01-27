@@ -54,14 +54,14 @@ export default function ExpoModal({ visible, onClose, expo }: ExpoModalProps) {
               style={styles.iconButton}
               onPress={() => handleOpenLink(expo.facebookLink)}
             >
-              <FontAwesome name="facebook" size={40} color="#3b5998" />
+              <FontAwesome name="facebook" size={40} color="#fff" />
             </TouchableOpacity>
             {expo.instagramLink && (
               <TouchableOpacity
                 style={styles.iconButton}
                 onPress={() => handleOpenLink(expo.instagramLink)}
               >
-                <FontAwesome name="instagram" size={40} color="#E1306C" />
+                <FontAwesome name="instagram" size={40} color="#fff" />
               </TouchableOpacity>
             )}
             {expo.websiteLink && (
@@ -70,7 +70,7 @@ export default function ExpoModal({ visible, onClose, expo }: ExpoModalProps) {
                 onPress={() => handleOpenLink(expo.websiteLink)}
               >
                 {/* Icône simple pour le web */}
-                <FontAwesome name="globe" size={40} color="#000" />
+                <FontAwesome name="globe" size={40} color="#fff" />
               </TouchableOpacity>
             )}
           </View>
@@ -91,13 +91,17 @@ const styles = StyleSheet.create({
   },
   banner: {
     height: '25%',
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#d9d9d9',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 50,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    position: 'relative',
   },
   textContainer: {
-    flex: 1,
+    position: 'absolute', 
+    bottom: 10,          
+    left: 20,            
   },
   expoName: {
     fontSize: 19,
@@ -107,22 +111,23 @@ const styles = StyleSheet.create({
   expoGenre: {
     fontSize: 15,
     color: 'gray',
+    marginTop: 4,
   },
   expoImage: {
-    width: 130,
-    height: 120,
-    borderRadius: 30,
-    marginLeft: -60,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginRight: 20, // Décaler le logo légèrement vers la gauche
   },
   content: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#333333',
   },
   description: {
     fontSize: 16,
     marginBottom: 20,
-    color: '#333',
+    color: '#fff',
     textAlign: 'justify',
   },
   socialIcons: {
@@ -135,8 +140,13 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 60,
-    right: 15,
-    zIndex: 40,
+    top: 30,
+    right: 10,
+    zIndex: 10,
+    padding: 5,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 15,
   },
 });
+
+

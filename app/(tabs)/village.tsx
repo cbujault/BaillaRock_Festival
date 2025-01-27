@@ -80,7 +80,7 @@ export default function Village() {
         <ScrollView horizontal contentContainerStyle={styles.horizontalListContent} showsHorizontalScrollIndicator={false}>
           {Food.map((item) => (
             <TouchableOpacity key={item.id} style={styles.container} onPress={() => handleExpoPress(item)}>
-              <Image style={styles.expoImage} source={item.image} resizeMode="contain" />
+              <Image style={styles.foodImage} source={item.image} resizeMode="contain" />
               <Text style={styles.expoName}>{item.name || 'Nom inconnu'}</Text>
             </TouchableOpacity>
           ))}
@@ -147,6 +147,12 @@ const styles = StyleSheet.create({
     height: IMAGE_HEIGHT,
     marginBottom: 8,
     borderRadius: 10,
+  },
+  foodImage: {
+    width: CONTAINER_WIDTH - 40,
+    height: CONTAINER_WIDTH - 40, // Assurez-vous que la largeur et la hauteur sont identiques
+    marginBottom: 8,
+    borderRadius: (CONTAINER_WIDTH - 40) / 2, // Pour rendre l'image circulaire
   },
   loadingContainer: {
     flex: 1,
