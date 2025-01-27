@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router'; // Pour la navigation entre les pages
 import * as Font from 'expo-font'; // Pour charger les polices
 import { useNavigation } from '@react-navigation/native'; // Import de useNavigation
 
 export default function Prevention() {
   const [fontLoaded, setFontLoaded] = useState(false);
+  const router = useRouter(); // Hook pour la navigation entre les pages
   const navigation = useNavigation(); // Hook de navigation de React Navigation
 
   // Charger les polices
@@ -24,17 +26,14 @@ export default function Prevention() {
     navigation.setOptions({
       title: 'Prévention', // Titre personnalisé
       headerLeft: () => (
-        <TouchableOpacity
-          onPress={() => navigation.goBack()} // Utilise goBack() à la place de router.back()
-          style={styles.backButton}
-        >
-          <Ionicons name="arrow-back" size={30} color="rgb(14, 93, 8)" />
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={30} color="'rgb(14, 93, 8)'" />
           <Text style={styles.backText}>Retour</Text>
         </TouchableOpacity>
       ),
       headerShown: true, // Afficher l'en-tête
     });
-  }, [navigation]); // On applique ces options lorsque `navigation` change
+  }, [navigation, router]); // On applique ces options lorsque `navigation` et `router` changent
 
   if (!fontLoaded) {
     return null; // Afficher un loader si la police n'est pas encore chargée
@@ -43,7 +42,7 @@ export default function Prevention() {
   return (
     <View style={styles.screenContainer}>
       <Text style={styles.text}>
-        À la Safe Place, tu trouveras :{"\n\n"}
+      A la Safe Place, tu trouveras :{"\n\n"}
         - Un lieu d'échange convivial.{"\n"}
         - Des informations sur la prévention des risques.{"\n"}
         - Des animations et de l'écoute.{"\n"}
