@@ -1,57 +1,68 @@
 import * as React from 'react';
-import { Modal, View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'; // Pour les icônes des réseaux sociaux
-import { ImageSourcePropType } from 'react-native';
+import { Modal, View, Text, StyleSheet, TouchableOpacity, ImageBackground, SafeAreaView, Linking } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 
 export type Part = {
-  name: string; // Nom du partenaire
-  genre: string; // Genre du partenaire
-  image: ImageSourcePropType; // Source de l'image (require)
-  description: string; // Description détaillée
+  name: string;
+  genre: string;
+  imageBG: any;
+  description: string;
+  socialLinks: { name: string; url: string }[];
 };
 
 export type PartModalProps = {
-  visible: boolean; // Afficher ou non le modal
-  onClose: () => void; // Fonction pour fermer le modal
-  part: Part | null; // Partenaire sélectionné ou null si aucun
+  visible: boolean;
+  onClose: () => void;
+  part: Part | null;
+};
+
+const socialIconMap: { [key: string]: keyof typeof FontAwesome.glyphMap } = {
+  facebook: 'facebook',
+  instagram: 'instagram',
+  website: 'link',
+};
+
+const getSocialIcon = (name: string): keyof typeof FontAwesome.glyphMap => {
+  return socialIconMap[name] || 'link';
 };
 
 export default function PartModal({ visible, onClose, part }: PartModalProps) {
-  if (!part) return null; // Ne pas afficher le modal si aucun partenaire n'est sélectionné
+  if (!part) return null;
+
+  const openLink = (url: string) => {
+    Linking.openURL(url).catch(() => {
+      alert('Impossible d\'ouvrir le lien.');
+    });
+  };
 
   return (
     <Modal animationType="slide" transparent={true} visible={visible}>
       <View style={styles.modalContainer}>
-        {/* Bannière supérieure avec l'image et le texte */}
+        <SafeAreaView>
+          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <FontAwesome name="times" size={30} color="green" />
+          </TouchableOpacity>
+        </SafeAreaView>
+
         <View style={styles.banner}>
-          <View style={styles.textContainer}>
-            <Text style={styles.partName}>{part.name}</Text>
-            <Text style={styles.partGenre}>{part.genre}</Text>
-          </View>
-          <Image source={part.image} style={styles.partImage} resizeMode="contain" />
+          <ImageBackground source={part.imageBG} style={styles.bannerBackground} resizeMode="cover">
+            <View style={styles.textContainer}>
+              <Text style={styles.partName}>{part.name}</Text>
+              <Text style={styles.partGenre}>{part.genre}</Text>
+            </View>
+          </ImageBackground>
         </View>
 
-        {/* Contenu principal */}
         <View style={styles.content}>
           <Text style={styles.description}>{part.description}</Text>
-          {/* Icônes des réseaux sociaux */}
           <View style={styles.socialIcons}>
-            <TouchableOpacity style={styles.iconButton}>
-              <FontAwesome name="facebook" size={40} color="#3b5998" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
-              <FontAwesome name="twitter" size={40} color="#1DA1F2" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
-              <FontAwesome name="instagram" size={40} color="#E1306C" />
-            </TouchableOpacity>
+            {part.socialLinks.map((social, index) => (
+              <TouchableOpacity key={index} onPress={() => openLink(social.url)}>
+                <FontAwesome name={getSocialIcon(social.name)} size={30} color="#fff" style={styles.socialIcon} />
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
-
-        {/* Icône de fermeture */}
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <FontAwesome name="times" size={30} />
-        </TouchableOpacity>
       </View>
     </Modal>
   );
@@ -60,57 +71,58 @@ export default function PartModal({ visible, onClose, part }: PartModalProps) {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.9)', // Ombre d'arrière-plan pour le modal
+    backgroundColor: 'rgb(40, 40, 40)',
+    position: 'relative',
   },
   banner: {
-    height: '25%',
-    backgroundColor: '#f2f2f2',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 50,
+    height: '30%',
+    position: 'relative',
+  },
+  bannerBackground: {
+    flex: 1,
+    justifyContent: 'flex-end',
   },
   textContainer: {
-    flex: 1,
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    alignSelf: 'flex-start',
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
   },
   partName: {
-    fontSize: 19,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#000',
+    color: 'white',
   },
   partGenre: {
-    fontSize: 15,
-    color: 'gray',
-  },
-  partImage: {
-    width: 130, // Taille de l'image
-    height: 120,
-    borderRadius: 30,
-    marginLeft: -60, // Décalage de l'image vers la gauche (valeur négative)
+    fontSize: 18,
+    color: 'white',
   },
   content: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
   },
   description: {
     fontSize: 16,
     marginBottom: 20,
-    color: '#333',
+    color: 'white',
     textAlign: 'justify',
   },
   socialIcons: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly', // Espacement égal entre les icônes
+    justifyContent: 'space-around',
     marginTop: 20,
   },
-  iconButton: {
-    padding: 20, // Plus de padding autour des icônes pour les rendre plus cliquables
+  socialIcon: {
+    marginHorizontal: 10,
   },
   closeButton: {
     position: 'absolute',
-    color: 'rgba(31, 84, 5, 0.7)',
-    top: 60, 
-    right: 15, // Décalage depuis la droite
-    zIndex: 40, // S'assurer que la croix soit au-dessus des autres éléments
+    top: 20,
+    right: 20,
+    zIndex: 999,
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 20,
   },
 });

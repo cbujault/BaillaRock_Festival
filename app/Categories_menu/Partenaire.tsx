@@ -1,83 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, FlatList, Dimensions, Image, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // Hook pour la navigation
+import { StyleSheet, View, Text, FlatList, Image, TouchableOpacity, ImageBackground } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router'; // Hook pour la navigation entre les pages
+import { useRouter } from 'expo-router';
 import PartModal from './popUp_Part';
 import { Partenaires } from '../../data/PartenaireData';
+import { backgroundImage } from '../../data/ExposantsData';
 
-const { width } = Dimensions.get('window');
-
-// Type pour un partenaire
 export type ListPartners = {
   id: string;
   name: string;
   genre: string;
   description: string;
   image: number;
+  imageBG: number;
+  socialLinks: { name: string; url: string }[];
 };
 
 export default function Partenaire() {
   const [selectedPart, setSelectedPart] = useState<ListPartners | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const navigation = useNavigation(); // Hook pour la navigation
-  const router = useRouter(); // Hook pour la navigation entre les pages
+  const navigation = useNavigation();
+  const router = useRouter();
 
-  // Charger et personnaliser l'en-tête dans useEffect
   useEffect(() => {
     navigation.setOptions({
-      title: 'Partenaires', // Titre de l'écran
+      title: 'Partenaires',
       headerLeft: () => (
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={30} color="rgb(14, 93, 8)" />
           <Text style={styles.backText}>Retour</Text>
         </TouchableOpacity>
       ),
-      headerShown: true, // Afficher l'en-tête
+      headerShown: true,
     });
   }, [navigation, router]);
-  
 
   const handlePartnerPress = (partner: ListPartners) => {
     setSelectedPart(partner);
     setModalVisible(true);
   };
 
-  const renderPartner = ({ item }: { item: ListPartners }) => (
-    <TouchableOpacity style={styles.partnerContainer} onPress={() => handlePartnerPress(item)}>
-      <Image style={styles.partnerImage} source={item.image} resizeMode="contain" />
-      <Text style={styles.partnerName}>{item.name || 'Nom inconnu'}</Text>
-    </TouchableOpacity>
-  );
-
   return (
-    <View style={styles.screenContainer}>
-      <FlatList
-        data={Partenaires}
-        keyExtractor={(item) => item.id}
-        renderItem={renderPartner}
-        numColumns={2}
-        contentContainerStyle={styles.listContent}
-        ListEmptyComponent={
-          <Text style={styles.emptyText}>
-            Aucun partenaire disponible
-          </Text>
-        }
-      />
-      <PartModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        part={selectedPart}
-      />
-    </View>
+    <ImageBackground source={backgroundImage} style={styles.backgroundImage} resizeMode="cover">
+      <View style={styles.screenContainer}>
+        <FlatList
+          data={Partenaires}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.partnerContainer} onPress={() => handlePartnerPress(item)}>
+              <Image style={styles.partnerImage} source={item.image} resizeMode="contain" />
+              <Text style={styles.partnerName}>{item.name || 'Nom inconnu'}</Text>
+            </TouchableOpacity>
+          )}
+          numColumns={2}
+          contentContainerStyle={styles.listContent}
+          ListEmptyComponent={<Text style={styles.emptyText}>Aucun partenaire disponible</Text>}
+        />
+        <PartModal visible={modalVisible} onClose={() => setModalVisible(false)} part={selectedPart} />
+      </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+  },
   screenContainer: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
     padding: 8,
+    paddingTop: 70,
   },
   listContent: {
     paddingBottom: 16,
@@ -89,10 +83,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#444',
     borderRadius: 8,
     margin: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -104,8 +94,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   partnerImage: {
-    width: width / 2 - 64,
-    height: width / 3 - 64,
+    width: 120,
+    height: 120,
     marginBottom: 8,
     borderRadius: 10,
   },
