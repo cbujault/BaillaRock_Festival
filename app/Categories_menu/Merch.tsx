@@ -3,6 +3,7 @@ import {StyleSheet, View, ImageBackground, Image, Text, Dimensions, ScrollView, 
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'; // Hook pour la navigation
 import { useRouter } from 'expo-router'; // Hook pour la navigation entre les pages
+import  MerchConfig  from '../../config/Config_Merch';
 
 // Import des images
 const BackgroundImage = require('../../assets/images/Merch/Affiche_drag.png');
