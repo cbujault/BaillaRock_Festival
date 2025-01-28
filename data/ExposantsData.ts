@@ -5,7 +5,7 @@ export const Exposants: ListExpo[] = [
     id: '1',
     name: 'La Minute Blonde',
     genre: 'Bar',
-    description: 'La minute blonde est un bar à bières, blablabla',
+    description: 'Description bar',
     image: require('../assets/images/Logo_Part/SaintG.png'),
     imageBG: require('../assets/images/Logo_FoodT/bg_ness_no.png'),
     socialLinks: [ 
@@ -15,9 +15,9 @@ export const Exposants: ListExpo[] = [
   },
   {
     id: '2',
-    name: 'La Minute Blonde',
-    genre: 'Bar',
-    description: 'La minute blonde est un bar à bières, blablabla',
+    name: 'Exposant 2',
+    genre: 'Genre',
+    description: 'Description',
     image: require('../assets/images/Logo_Part/SaintG.png'),
     imageBG: require('../assets/images/Logo_FoodT/bg_ness_no.png'),
     socialLinks: [
@@ -27,9 +27,9 @@ export const Exposants: ListExpo[] = [
   },
   {
     id: '3',
-    name: 'La Minute Blonde',
-    genre: 'Bar',
-    description: 'La minute blonde est un bar à bières, blablabla',
+    name: 'Exposant 3',
+    genre: 'Genre',
+    description: 'Description',
     image: require('../assets/images/Logo_Part/SaintG.png'),
     imageBG: require('../assets/images/Logo_FoodT/bg_ness_no.png'),
     socialLinks: [
@@ -39,9 +39,9 @@ export const Exposants: ListExpo[] = [
   },
   {
     id: '4',
-    name: 'La Minute Blonde',
-    genre: 'Bar',
-    description: 'La minute blonde est un bar à bières, blablabla',
+    name: 'Exposant 4',
+    genre: 'Genre',
+    description: 'Description',
     image: require('../assets/images/Logo_Part/SaintG.png'),
     imageBG: require('../assets/images/Logo_FoodT/bg_ness_no.png'),
     socialLinks: [

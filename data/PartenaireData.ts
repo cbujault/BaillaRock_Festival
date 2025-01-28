@@ -5,7 +5,7 @@ export const Partenaires: ListPartners[] = [
     id: '1',
     name: 'Crédit Agricole',
     genre: 'Banque',
-    description:'Banque blablablablbalabalba',
+    description:'Description Crédit Agricole',
     image: require('../assets/images/Logo_Part/CA.png'),
     imageBG: require('../assets/images/Logo_Part/CA.png'),
     socialLinks: [
@@ -18,7 +18,7 @@ export const Partenaires: ListPartners[] = [
     id: '2',
     name: 'Saint-Georges lès-Baillargeaux',
     genre: 'Commune',
-    description: 'Commune blablablablabalablab',
+    description: 'Description Commune',
     image: require('../assets/images/Logo_Part/SaintG.png'),
     imageBG: require('../assets/images/Logo_Part/SaintG.png'),
     socialLinks: [
