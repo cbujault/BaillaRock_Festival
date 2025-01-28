@@ -1,41 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, View, ImageBackground, Image, Text, Dimensions, ScrollView, Modal, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ImageBackground,
+  Image,
+  Text,
+  Dimensions,
+  ScrollView,
+  Modal,
+  TouchableOpacity,
+} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native'; // Hook pour la navigation
-import { useRouter } from 'expo-router'; // Hook pour la navigation entre les pages
-import  MerchConfig  from '../../config/Config_Merch';
+import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import MerchConfig from '../../config/Config_Merch';
 import { Ionicons } from '@expo/vector-icons';
-
-
-// Import des images
-const BackgroundImage = require('../../assets/images/Merch/Affiche_drag.png');
-const TopImage = require('../../assets/images/Merch/sweat.png');
-const LogoImage = require('../../assets/images/Merch/logo.png');
-const TeeshirtImage = require('../../assets/images/Merch/teeshirt_fest.png');
-const PartImage = require('../../assets/images/Merch/part.png');
+import ImageZoom from 'react-native-image-pan-zoom';
 
 const { width, height } = Dimensions.get('window');
 
 const Merch: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [selectedImage, setSelectedImage] = useState<any>(null);
   const navigation = useNavigation();
   const router = useRouter();
 
   useEffect(() => {
     navigation.setOptions({
-      title: 'Merchandising', // Titre personnalisé
+      title: 'Merchandising',
       headerLeft: () => (
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={30} color="#0E5D08" />
           <Text style={styles.backText}>Retour</Text>
         </TouchableOpacity>
       ),
-      headerShown: true, // Afficher l'en-tête
+      headerShown: true,
     });
   }, [navigation, router]);
 
-  const handleImagePress = (image: number) => {
+  const handleImagePress = (image: any) => {
     setSelectedImage(image);
     setModalVisible(true);
   };
@@ -73,7 +76,16 @@ const Merch: React.FC = () => {
           <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
             <FontAwesome name="times" size={30} color={MerchConfig.colors.backButton} />
           </TouchableOpacity>
-          {selectedImage && <Image source={selectedImage} style={styles.zoomedImage} />}
+          {selectedImage && (
+            <ImageZoom
+              cropWidth={width}
+              cropHeight={height}
+              imageWidth={width * 0.9}
+              imageHeight={width * 0.9}
+            >
+              <Image source={selectedImage} style={styles.zoomedImage} />
+            </ImageZoom>
+          )}
         </View>
       </Modal>
     </View>
@@ -160,13 +172,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   zoomedImage: {
-    width: width * 0.9,
-    height: width * 0.9,
+    width: '100%',
+    height: '100%',
     resizeMode: 'contain',
   },
   closeButton: {
     position: 'absolute',
-    top: '20%',
+    top: 50,
     right: 20,
     zIndex: 3,
     backgroundColor: 'transparent',
